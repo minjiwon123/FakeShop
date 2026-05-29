@@ -197,7 +197,6 @@
         font-weight: 700;
       }
 
-      /* 결제하기 / 최종 결제 진행 공통 스타일 */
       .btn-pay-active {
         background: var(--point-red) !important;
         color: #fff !important;
@@ -213,10 +212,9 @@
           box-shadow 0.05s ease-out,
           background-color 0.05s ease-out !important;
         transform: translateY(0px);
-        -webkit-tap-highlight-color: transparent; /* 터치 시 푸르스름한 잔상 하이라이트 완전히 파괴 */
+        -webkit-tap-highlight-color: transparent;
       }
 
-      /* 🌟 [추가] 자바스크립트 햅틱 클래스 연동 가동 스펙 (결제류 버튼 전용 터치 작동 상태) */
       .btn-pay-active.js-touched {
         background-color: var(--stroke-orange) !important;
         box-shadow: 0 2px 0px rgba(0, 0, 0, 0.2) !important;
@@ -296,7 +294,6 @@
         z-index: 1300;
       }
 
-      /* 이전으로 단추 스타일 */
       .btn-back-style {
         background: white !important;
         border: 3px solid var(--point-blue) !important;
@@ -318,7 +315,6 @@
         -webkit-tap-highlight-color: transparent;
       }
 
-      /* 🌟 [추가] 자바스크립트 햅틱 클래스 연동 가동 스펙 (이전으로 및 LANGUAGE 버튼 전용 터치 작동 상태) */
       .btn-back-style.js-touched,
       .language-btn.js-touched {
         background-color: var(--point-blue) !important;
@@ -335,7 +331,6 @@
         z-index: 1300;
       }
 
-      /* LANGUAGE 메인 버튼 */
       .language-btn {
         background: white !important;
         border: 3px solid var(--point-blue) !important;
@@ -368,7 +363,6 @@
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
       }
 
-      /* 드롭다운 항목 단추 */
       .language-item {
         padding: 1.2vh 2vh !important;
         cursor: pointer;
@@ -384,7 +378,6 @@
         -webkit-tap-highlight-color: transparent;
       }
 
-      /* 🌟 [추가] 자바스크립트 햅틱 클래스 연동 가동 스펙 (한국어/ENGLISH 리스트 전용 터치 작동 상태) */
       .language-item.js-touched {
         background-color: var(--point-red) !important;
         color: white !important;
@@ -501,6 +494,7 @@
       let unitWon = '원';
       let textModalTotal = '총 결제 금액: ';
       let textBtnBack = '이전으로';
+      let textBtnPayFinal = '결제하기'; // 🌟 전역 모달 최종 버튼 상태 국적 변수화 완료
 
       let textRecListTitle = '[구매 확정 목록]';
       let textRecTotalQty = '총 수량';
@@ -692,6 +686,9 @@
         });
         document.getElementById('cart-total-price').innerText =
           `${textModalTotal}${grandTotal.toLocaleString()}${unitWon}`;
+
+        // 🌟 [수정] 모달창 열릴 때 실시간 언어 상태값에 맞춰서 글자를 주입하도록 보정
+        document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
         document.getElementById('modal-cart').style.display = 'flex';
       }
 
@@ -804,6 +801,8 @@
         unitWon = '원';
         textModalTotal = '총 결제 금액: ';
         textBtnBack = '이전으로';
+        textBtnPayFinal = '결제하기'; // 변수 복구
+
         textRecListTitle = '[구매 확정 목록]';
         textRecTotalQty = '총 수량';
         textRecTotalPrice = '총 결제 금액';
@@ -826,7 +825,7 @@
         document.getElementById('btn-open-cart').innerText = '결제하기';
         document.getElementById('text-modal-title').innerText =
           '주문 리스트 확인';
-        document.getElementById('btn-final-pay').innerText = '결제하기';
+        document.getElementById('btn-final-pay').innerText = textBtnPayFinal; // 변수 대입식으로 변경 완료
         document.getElementById('btn-top-back').innerText = textBtnBack;
 
         if (document.getElementById('modal-cart').style.display === 'flex') {
@@ -854,14 +853,11 @@
         globalLangBox.classList.remove('open');
       });
 
-      // 🌟 [추가] 터치스크린 전용 초정밀 전역 햅틱 트래킹 매니저 주입
-      // 이 스크립트가 300ms 딜레이를 무시하고 살결이 닿는 즉시 강제로 애니메이션 클래스를 켜고 꺼줍니다.
       const targetButtons =
         '.btn-pay-active, .btn-back-style, .language-btn, .language-item';
 
       function addTouchEffect(target) {
         const btn = target.closest(targetButtons);
-
         if (btn) {
           btn.classList.add('js-touched');
         }
@@ -869,7 +865,6 @@
 
       function removeTouchEffect(target) {
         const btn = target.closest(targetButtons);
-
         if (btn) {
           setTimeout(() => {
             btn.classList.remove('js-touched');
@@ -877,7 +872,6 @@
         }
       }
 
-      /* 터치 */
       document.addEventListener(
         'touchstart',
         (e) => {
@@ -885,7 +879,6 @@
         },
         { passive: true },
       );
-
       document.addEventListener(
         'touchend',
         (e) => {
@@ -893,21 +886,15 @@
         },
         { passive: true },
       );
-
-      /* 마우스 */
       document.addEventListener('mousedown', (e) => {
         addTouchEffect(e.target);
       });
-
       document.addEventListener('mouseup', (e) => {
         removeTouchEffect(e.target);
       });
-
-      /* 터치모니터 */
       document.addEventListener('pointerdown', (e) => {
         addTouchEffect(e.target);
       });
-
       document.addEventListener('pointerup', (e) => {
         removeTouchEffect(e.target);
       });
