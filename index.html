@@ -197,28 +197,29 @@
         font-weight: 700;
       }
 
-      /* 🌟 [수정] 메인 유색 결제 버튼 터치 햅틱 반응 스펙 심기 */
+      /* 🌟 [수정] 결제하기 & 최종 결제 진행 버튼 터치 반응 최적화 잠금 해제 (!important 추가) */
       .btn-pay-active {
-        background: var(--point-red);
-        color: #fff;
-        border: 3px solid #fff;
-        padding: 2.2vh 3.5vh;
-        border-radius: 2vh;
-        font-size: 2.5vh;
-        cursor: pointer;
-        font-family: 'Jua', sans-serif;
-        box-shadow: 0 6px 0px var(--stroke-orange); /* 팝아트 입체 그림자 강조 */
+        background: var(--point-red) !important;
+        color: #fff !important;
+        border: 3px solid #fff !important;
+        padding: 2.2vh 3.5vh !important;
+        border-radius: 2vh !important;
+        font-size: 2.5vh !important;
+        cursor: pointer !important;
+        font-family: 'Jua', sans-serif !important;
+        box-shadow: 0 6px 0px var(--stroke-orange) !important;
         transition:
-          transform 0.1s ease-out,
-          box-shadow 0.1s ease-out,
-          background-color 0.1s ease-out;
+          transform 0.05s ease-out,
+          box-shadow 0.05s ease-out,
+          background-color 0.05s ease-out !important;
+        transform: translateY(0px);
       }
 
-      /* 터치 상태(active) 연출: 버튼이 쏙 들어가고 색이 묵직해짐 */
+      /* 터치하고 있을 때 즉각 반응하도록 강력 고정 */
       .btn-pay-active:active {
-        background-color: var(--stroke-orange);
-        box-shadow: 0 2px 0px rgba(0, 0, 0, 0.2);
-        transform: translateY(4px);
+        background-color: var(--stroke-orange) !important;
+        box-shadow: 0 2px 0px rgba(0, 0, 0, 0.2) !important;
+        transform: translateY(4px) !important;
       }
 
       .modal {
@@ -294,32 +295,32 @@
         z-index: 1300;
       }
 
-      /* 🌟 [수정] 흰색 이전으로 버튼 터치 피드백 연출 */
+      /*이전으로 버튼 모듈 */
       .btn-back-style {
-        background: white;
-        border: 3px solid var(--point-blue);
-        border-radius: 999px;
-        padding: 0.8vh 3.2vh;
-        font-size: 2.2vh;
-        font-weight: 700;
-        cursor: pointer;
-        color: var(--stroke-orange);
-        box-shadow: 0 4px 0px rgba(0, 0, 0, 0.08);
-        letter-spacing: -0.05vw;
+        background: white !important;
+        border: 3px solid var(--point-blue) !important;
+        border-radius: 999px !important;
+        padding: 0.8vh 3.2vh !important;
+        font-size: 2.2vh !important;
+        font-weight: 700 !important;
+        cursor: pointer !important;
+        color: var(--stroke-orange) !important;
+        box-shadow: 0 4px 0px rgba(0, 0, 0, 0.08) !important;
+        letter-spacing: -0.05vw !important;
         transition:
-          transform 0.1s ease-out,
-          box-shadow 0.1s ease-out,
-          background-color 0.1s ease-out,
-          color 0.1s ease-out;
+          transform 0.05s ease-out,
+          box-shadow 0.05s ease-out,
+          background-color 0.05s ease-out,
+          color 0.05s ease-out !important;
         font-family: 'Jua', 'Fredoka', sans-serif !important;
+        transform: translateY(0px);
       }
 
-      /* 터치 상태(active): 상큼하게 밀크 블루로 물들며 통통 튐 */
       .btn-back-style:active {
-        background-color: var(--point-blue);
-        color: white;
-        box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
-        transform: translateY(3px);
+        background-color: var(--point-blue) !important;
+        color: white !important;
+        box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(3px) !important;
       }
 
       .language-box {
@@ -330,31 +331,32 @@
         z-index: 1300;
       }
 
-      /* 🌟 [수정] 언어 선택 메인 단추 터치 피드백 연출 */
+      /* LANGUAGE 대가리 메인 단추 */
       .language-btn {
-        background: white;
-        border: 3px solid var(--point-blue);
-        border-radius: 999px;
-        padding: 0.8vh 2.5vh;
-        font-size: 2.2vh;
-        font-weight: 700;
-        cursor: pointer;
-        color: var(--stroke-orange);
-        box-shadow: 0 4px 0px rgba(0, 0, 0, 0.08);
-        letter-spacing: 0.05vw;
+        background: white !important;
+        border: 3px solid var(--point-blue) !important;
+        border-radius: 999px !important;
+        padding: 0.8vh 2.5vh !important;
+        font-size: 2.2vh !important;
+        font-weight: 700 !important;
+        cursor: pointer !important;
+        color: var(--stroke-orange) !important;
+        box-shadow: 0 4px 0px rgba(0, 0, 0, 0.08) !important;
+        letter-spacing: 0.05vw !important;
         transition:
-          transform 0.1s ease-out,
-          box-shadow 0.1s ease-out,
-          background-color 0.1s ease-out,
-          color 0.1s ease-out;
+          transform 0.05s ease-out,
+          box-shadow 0.05s ease-out,
+          background-color 0.05s ease-out,
+          color 0.05s ease-out !important;
         font-family: 'Jua', 'Fredoka', sans-serif !important;
+        transform: translateY(0px);
       }
 
       .language-btn:active {
-        background-color: var(--point-blue);
-        color: white;
-        box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
-        transform: translateY(3px);
+        background-color: var(--point-blue) !important;
+        color: white !important;
+        box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(3px) !important;
       }
 
       .language-menu {
@@ -368,23 +370,27 @@
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
       }
 
+      /* 🌟 [수정] 한국어 / ENGLISH 드롭다운 메뉴 아이템 터치 햅틱 반응 장치 */
       .language-item {
-        padding: 1.2vh 2vh;
-        cursor: pointer;
-        color: var(--text-dark);
-        font-size: 2vh;
-        font-weight: 700;
-        background: white;
-        transition: 0.1s;
-        text-align: center;
+        padding: 1.2vh 2vh !important;
+        cursor: pointer !important;
+        color: var(--text-dark) !important;
+        font-size: 2vh !important;
+        font-weight: 700 !important;
+        background: white !important;
+        transition:
+          background-color 0.05s ease-out,
+          color 0.05s ease-out !important;
+        text-align: center !important;
         font-family: 'Jua', 'Fredoka', sans-serif !important;
       }
 
-      /* 언어 선택지 리스트 터치 시 반응 */
+      /* 드롭다운 리스트 항목 손가락 터치 순간 강렬한 반전 피드백 연출 */
       .language-item:active {
-        background: var(--point-blue);
-        color: white;
+        background-color: var(--point-red) !important;
+        color: white !important;
       }
+
       .language-box.open .language-menu {
         display: block;
       }
@@ -401,13 +407,11 @@
   </head>
 
   <body>
-    <!-- 전시장 마우스 우클릭 / 드래그 금지 보안 장치 -->
     <script>
       document.addEventListener('contextmenu', (e) => e.preventDefault());
       document.addEventListener('selectstart', (e) => e.preventDefault());
     </script>
 
-    <!-- 좌측 상단 이전으로 배치 컨테이너 -->
     <div class="back-box" id="global-back-box">
       <button
         class="btn-back-style"
@@ -418,7 +422,6 @@
       </button>
     </div>
 
-    <!-- 우측 상단 언어 선택 제어 박스 -->
     <div class="language-box" id="global-lang-box">
       <button class="language-btn">LANGUAGE</button>
       <div class="language-menu">
@@ -612,7 +615,6 @@
         });
       }
 
-      // 🌟 [통합 교정완료] 자릿수 무상관 초정밀 주입 바코드 감지 레이더
       barcodeInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           const valStr = e.target.value.replace(/\s/g, '').trim();
@@ -728,7 +730,6 @@
           itemsListHTML += `<div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px;"><span>${name} x${data.count}</span><span>${data.totalPrice.toLocaleString()}${unitWon}</span></div>`;
         });
 
-        // 🌟 [교정] 영문화 날짜 연동 마스터 변수 매핑 완성
         const receiptDate =
           currentLang === 'en'
             ? new Date().toLocaleString('en-US')
