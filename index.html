@@ -28,6 +28,7 @@
         overflow: hidden;
       }
 
+      /* 🔍 index.html에서 이 구역을 찾으세요! */
       #kiosk-frame {
         width: 100%;
         height: 100vh;
@@ -36,8 +37,10 @@
         overflow: hidden;
         cursor: pointer;
 
-        /* 🌟 왼쪽으로 강제로 밀어버리는 치트키 */
-        margin-left: -20px; /* 👈 숫자를 -30px, -50px 등으로 더 크게 줄수록 왼쪽으로 많이 이동합니다! */
+        /* 🌟 정중앙 배치를 위해 아래 3줄을 추가해 주세요! */
+        margin: 0 auto;
+        left: 0;
+        right: 0;
       }
 
       #video-background {
