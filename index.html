@@ -56,12 +56,24 @@
         justify-content: center;
       }
 
-      /* 텍스트 스타일 원본 보존 */
+      /* 대기 화면 텍스트 애니메이션 */
       .touch-msg {
         font-size: 3.2vh;
         font-weight: 400;
         text-align: center;
         color: #000;
+        animation: text-glow-pulse 3s infinite ease-in-out;
+      }
+
+      @keyframes text-glow-pulse {
+        0%,
+        100% {
+          color: #000000;
+        }
+        50% {
+          color: #ffffff;
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+        }
       }
 
       #screen-main {
@@ -76,15 +88,16 @@
         z-index: 1100;
       }
 
+      /* 버튼 간섭 차단 패딩 */
       .scan-header {
         width: 100%;
-        padding: 6vh 0 2vh 0;
+        padding: 8vh 0 1vh 0;
         text-align: center;
       }
 
-      /* 상단 메인 타이틀: 겉외곽선 매커니즘 */
+      /* 타이틀 글자 겉외곽선 매커니즘 */
       .scan-title {
-        font-size: 4.5vh;
+        font-size: 4vh;
         color: var(--main-yellow);
         margin: 0;
         letter-spacing: 0.1vh;
@@ -117,7 +130,6 @@
         display: block;
       }
 
-      /* 하단 대시보드 (파란색 확장 배치) */
       .scan-dashboard {
         position: absolute;
         bottom: 0;
@@ -141,16 +153,15 @@
       }
       .dash-section:nth-child(2) {
         flex: 0.6;
-      } /* 수량 구획 크기 압축 */
+      }
       .dash-section:nth-child(3) {
         flex: 1.2;
-      } /* 금액 구획 공간 확보 */
+      }
       .dash-section:last-child {
         border-right: none;
         flex: 1.3;
       }
 
-      /* 대시보드 라벨 외곽선 */
       .dash-label {
         font-size: 2vh;
         color: var(--main-yellow);
@@ -211,7 +222,6 @@
         z-index: 1200;
       }
 
-      /* 주문 리스트 확인 모달 타이틀 */
       .modal-title {
         font-size: 6vh;
         margin-bottom: 4vh;
@@ -241,7 +251,19 @@
         overflow-y: auto;
       }
 
-      /* 장바구니 내 총 합계 출력 라벨 무드 */
+      #cart-list::-webkit-scrollbar {
+        width: 12px;
+      }
+      #cart-list::-webkit-scrollbar-track {
+        background: var(--main-yellow);
+        border-radius: 10px;
+      }
+      #cart-list::-webkit-scrollbar-thumb {
+        background: var(--point-blue);
+        border: 2px solid #fff;
+        border-radius: 10px;
+      }
+
       .cart-total-bar {
         width: 65%;
         text-align: right;
@@ -251,13 +273,68 @@
         font-weight: 900;
       }
 
+      /* 🌐 전역 다국어 제어 박스 */
+      .language-box {
+        display: none;
+        position: absolute;
+        top: 2vh;
+        right: 4vw;
+        z-index: 1300;
+        font-family: 'Fredoka', 'Jua', sans-serif;
+      }
+
+      .language-btn {
+        background: white;
+        border: 3px solid var(--point-blue);
+        border-radius: 999px;
+        padding: 0.8vh 2.5vh;
+        font-size: 2.2vh;
+        font-weight: 700;
+        cursor: pointer;
+        color: var(--stroke-orange);
+        box-shadow: 0 4px 0px rgba(0, 0, 0, 0.05);
+        letter-spacing: 0.05vw;
+        transition: 0.1s;
+      }
+
+      .language-menu {
+        display: none;
+        margin-top: 1vh;
+        background: white;
+        border: 3px solid var(--point-blue);
+        border-radius: 1.5vh;
+        overflow: hidden;
+        min-width: 140px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .language-item {
+        padding: 1.2vh 2vh;
+        cursor: pointer;
+        color: var(--text-dark);
+        font-size: 2vh;
+        font-weight: 700;
+        background: white;
+        transition: 0.2s;
+        text-align: center;
+        font-family: 'Fredoka', 'Jua', sans-serif;
+      }
+
+      .language-item:hover {
+        background: var(--point-blue);
+        color: white;
+      }
+
+      .language-box.open .language-menu {
+        display: block;
+      }
+
       #barcode-input {
         position: absolute;
         opacity: 0;
         pointer-events: none;
       }
 
-      /* 평소에는 숨김 */
       #print-receipt-zone {
         display: none;
       }
@@ -280,7 +357,8 @@
         #screen-main,
         #modal-cart,
         #video-background,
-        #screen-start {
+        #screen-start,
+        .language-box {
           display: none !important;
         }
 
@@ -365,18 +443,28 @@
   </head>
 
   <body>
+    <div class="language-box" id="global-lang-box">
+      <button class="language-btn">LANGUAGE</button>
+      <div class="language-menu">
+        <div class="language-item" onclick="changeToKorean()">한국어</div>
+        <div class="language-item" onclick="loadEnglishScript()">ENGLISH</div>
+      </div>
+    </div>
+
     <div id="kiosk-frame">
       <video id="video-background" autoplay muted loop playsinline>
         <source src="intro_video.mp4" type="video/mp4" />
       </video>
 
       <div id="screen-start" onclick="startKiosk()">
-        <div class="touch-msg">화면을 터치해 주세요.</div>
+        <div class="touch-msg" id="text-touch-msg">화면을 터치해 주세요.</div>
       </div>
 
       <div id="screen-main">
         <div class="scan-header">
-          <h1 class="scan-title">상품 바코드를 스캔해 주세요</h1>
+          <h1 class="scan-title" id="text-scan-title">
+            상품 바코드를 스캔해 주세요
+          </h1>
         </div>
 
         <div id="canvas-container">
@@ -385,22 +473,26 @@
 
         <div class="scan-dashboard">
           <div class="dash-section">
-            <div class="dash-label">상품 이름</div>
+            <div class="dash-label" id="lbl-dash-name">상품 이름</div>
             <div id="dash-name-list" class="list-container"></div>
           </div>
 
           <div class="dash-section">
-            <div class="dash-label">수량</div>
+            <div class="dash-label" id="lbl-dash-qty">수량</div>
             <div id="dash-qty-list" class="list-container"></div>
           </div>
 
           <div class="dash-section">
-            <div class="dash-label">금액</div>
+            <div class="dash-label" id="lbl-dash-price">금액</div>
             <div id="dash-price-list" class="list-container"></div>
           </div>
 
           <div class="dash-section">
-            <button class="btn-pay-active" onclick="openCart()">
+            <button
+              class="btn-pay-active"
+              id="btn-open-cart"
+              onclick="openCart()"
+            >
               결제하기
             </button>
           </div>
@@ -408,15 +500,17 @@
       </div>
 
       <div id="modal-cart" class="modal">
-        <h1 class="modal-title">주문 리스트 확인</h1>
-
+        <h1 class="modal-title" id="text-modal-title">주문 리스트 확인</h1>
         <div id="cart-list"></div>
-
+        <!-- 💰 자바스크립트 변수 결합 구역 -->
         <div class="cart-total-bar" id="cart-total-price">
           총 결제 금액: 0원
         </div>
-
-        <button class="btn-pay-active" onclick="actionPrintAndReset()">
+        <button
+          class="btn-pay-active"
+          id="btn-final-pay"
+          onclick="actionPrintAndReset()"
+        >
           최종 결제 진행
         </button>
       </div>
@@ -424,13 +518,11 @@
       <input type="text" id="barcode-input" />
     </div>
 
+    <!-- PRINT ZONE -->
     <div id="print-receipt-zone">
       <div class="print-title">THE FAKE SHOP</div>
-
       <div style="text-align: center; font-size: 9px" id="print-date"></div>
-
       <div class="print-divider"></div>
-
       <div class="receipt-face-wrapper" id="receipt-face-box">
         <img
           class="receipt-base-img"
@@ -438,30 +530,28 @@
           alt="베이스 얼굴"
         />
       </div>
-
       <div class="print-divider"></div>
-
-      <div style="font-weight: bold; margin-bottom: 5px">[구매 확정 목록]</div>
-
+      <div
+        style="font-weight: bold; margin-bottom: 5px"
+        id="text-receipt-list-title"
+      >
+        [구매 확정 목록]
+      </div>
       <div id="print-items-body"></div>
-
       <div class="print-divider"></div>
-
       <div class="print-row" style="font-weight: bold; font-size: 12px">
-        <span>총 수량</span>
+        <span id="text-receipt-total-qty">총 수량</span>
         <span id="print-total-count">0개</span>
       </div>
       <div
         class="print-row"
         style="font-weight: bold; font-size: 13px; margin-top: 2px"
       >
-        <span>총 결제 금액</span>
+        <span id="text-receipt-total-price">총 결제 금액</span>
         <span id="print-total-price-zone">0원</span>
       </div>
-
       <div class="print-divider"></div>
-
-      <div class="print-footer">
+      <div class="print-footer" id="text-receipt-footer">
         귀하의 신원 데이터는 수집 완료되었습니다.<br />
         이용해 주셔서 감사합니다.
       </div>
@@ -469,47 +559,49 @@
     </div>
 
     <script>
+      // 🌐 번역 모드 제어 전역 상태 변수들
+      let currentLang = 'ko';
+      let unitQty = '개';
+      let unitWon = '원';
+      let textModalTotal = '총 결제 금액: '; // 🌟 장바구니 합계 문장 국적 스케일
+
       const canvas = document.getElementById('faceCanvas');
       const ctx = canvas.getContext('2d');
       const barcodeInput = document.getElementById('barcode-input');
+      const globalLangBox = document.getElementById('global-lang-box');
 
       let scannedParts = [];
 
-      // 💰 각 부품 정체성에 매칭되는 위트 있는 단가(Price) 데이터 삽입
       const assetsInfo = {
         2030999: {
           name: '안유진의 눈',
           type: 'eye',
           src: 'assets/eye_yujin.png',
-          price: 15000,
+          price: 2748000,
         },
-
         1392010: {
           name: '오준현 교수님의 눈',
           type: 'eye',
           src: 'assets/eye_prof.png',
-          price: 15000,
+          price: 549000,
         },
-
         5203344587: {
           name: '신세경의 코',
           type: 'nose',
           src: 'assets/nose_sekyung.png',
-          price: 15000,
+          price: 142000,
         },
-
         77588517748: {
           name: '이도현의 입',
           type: 'mouth',
           src: 'assets/mouth_dohyun.png',
-          price: 15000,
+          price: 156000,
         },
-
         30920: {
           name: '비비의 점',
           type: 'mole',
           src: 'assets/mole_bibi.png',
-          price: 3000,
+          price: 53000,
         },
       };
 
@@ -521,21 +613,18 @@
       Object.keys(assetsInfo).forEach((code) => {
         const img = new Image();
         img.src = assetsInfo[code].src;
-
         loadedImages[code] = img;
-
         img.onload = draw;
       });
 
       function startKiosk() {
         document.getElementById('screen-start').style.display = 'none';
-
         const main = document.getElementById('screen-main');
-
         main.style.display = 'flex';
 
-        barcodeInput.focus();
+        globalLangBox.style.display = 'block';
 
+        barcodeInput.focus();
         draw();
       }
 
@@ -544,10 +633,8 @@
 
         if (baseImg.complete) {
           const scale = Math.max(1280 / baseImg.width, 1280 / baseImg.height);
-
           const x = (1280 - baseImg.width * scale) / 2;
           const y = (1280 - baseImg.height * scale) / 2;
-
           ctx.drawImage(
             baseImg,
             x,
@@ -557,9 +644,14 @@
           );
         }
 
-        scannedParts.forEach((part) => {
-          const img = loadedImages[part.code];
+        const sortedParts = [...scannedParts].sort((a, b) => {
+          if (assetsInfo[a.code].type === 'mole') return 1;
+          if (assetsInfo[b.code].type === 'mole') return -1;
+          return 0;
+        });
 
+        sortedParts.forEach((part) => {
+          const img = loadedImages[part.code];
           if (img && img.complete) {
             ctx.drawImage(img, part.randomX, part.randomY, 1280, 1280);
           }
@@ -569,31 +661,23 @@
       barcodeInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           const val = e.target.value.replace(/\s/g, '').trim();
-
           console.log('스캔값:', val);
-
           const info = assetsInfo[val];
 
           if (info) {
             scannedParts.push({
               code: val,
               name: info.name,
-              price: info.price, // 가격 정보 바인딩
-
+              price: info.price,
               randomX: (Math.random() - 0.5) * 180,
-
               randomY: (Math.random() - 0.5) * 300,
             });
-
             updateDashboards();
-
             draw();
-
             console.log('추가 완료');
           } else {
             console.log('없는 바코드');
           }
-
           e.target.value = '';
         }
       });
@@ -606,11 +690,12 @@
         const summary = {};
 
         scannedParts.forEach((p) => {
-          if (!summary[p.name]) {
-            summary[p.name] = { count: 0, totalPrice: 0 };
+          const currentName = assetsInfo[p.code].name;
+          if (!summary[currentName]) {
+            summary[currentName] = { count: 0, totalPrice: 0 };
           }
-          summary[p.name].count += 1;
-          summary[p.name].totalPrice += p.price;
+          summary[currentName].count += 1;
+          summary[currentName].totalPrice += p.price;
         });
 
         nameDiv.innerHTML = '';
@@ -619,110 +704,101 @@
 
         Object.entries(summary).forEach(([name, data]) => {
           nameDiv.innerHTML += `<div>${name}</div>`;
-          qtyDiv.innerHTML += `<div class="qty-row">${data.count}개</div>`;
-          priceDiv.innerHTML += `<div class="price-row">${data.totalPrice.toLocaleString()}원</div>`;
+          qtyDiv.innerHTML += `<div class="qty-row">${data.count}${unitQty}</div>`;
+          priceDiv.innerHTML += `<div class="price-row">${data.totalPrice.toLocaleString()}${unitWon}</div>`;
         });
       }
 
       function openCart() {
         document.getElementById('screen-main').style.display = 'none';
-
         const list = document.getElementById('cart-list');
-
         list.innerHTML = '';
 
         const summary = {};
         let grandTotal = 0;
 
         scannedParts.forEach((p) => {
-          if (!summary[p.name]) {
-            summary[p.name] = { count: 0, totalPrice: 0 };
+          const currentName = assetsInfo[p.code].name;
+          if (!summary[currentName]) {
+            summary[currentName] = { count: 0, totalPrice: 0 };
           }
-          summary[p.name].count += 1;
-          summary[p.name].totalPrice += p.price;
+          summary[currentName].count += 1;
+          summary[currentName].totalPrice += p.price;
           grandTotal += p.price;
         });
 
         Object.entries(summary).forEach(([name, data]) => {
           list.innerHTML += `
-            <div style="
-                display:flex;
-                justify-content:space-between;
-                margin-bottom:1.5vh;
-            ">
-                <span>${name} (${data.count}개)</span>
-                <span style="color:var(--stroke-orange); font-weight:900;">${data.totalPrice.toLocaleString()}원</span>
+            <div style="display:flex; justify-content:space-between; margin-bottom:1.5vh;">
+                <span>${name} (${data.count}${unitQty})</span>
+                <span style="color:var(--stroke-orange); font-weight:900;">${data.totalPrice.toLocaleString()}${unitWon}</span>
             </div>
-        `;
+          `;
         });
 
-        // 모달창 총 결제금액 세팅
         document.getElementById('cart-total-price').innerText =
-          `총 결제 금액: ${grandTotal.toLocaleString()}원`;
+          `${textModalTotal}${grandTotal.toLocaleString()}${unitWon}`;
         document.getElementById('modal-cart').style.display = 'flex';
       }
 
       function actionPrintAndReset() {
         const faceBox = document.getElementById('receipt-face-box');
-
         const oldParts = faceBox.querySelectorAll('.receipt-part-img');
-
         oldParts.forEach((el) => el.remove());
 
-        scannedParts.forEach((part) => {
+        const sortedParts = [...scannedParts].sort((a, b) => {
+          if (assetsInfo[a.code].type === 'mole') return 1;
+          if (assetsInfo[b.code].type === 'mole') return -1;
+          return 0;
+        });
+
+        sortedParts.forEach((part) => {
           const imgTag = document.createElement('img');
-
           imgTag.className = 'receipt-part-img';
-
           imgTag.src = assetsInfo[part.code].src;
 
           const scaleRatio = 48 / 1280;
-
           const moveX = part.randomX * scaleRatio;
           const moveY = part.randomY * scaleRatio;
-
           imgTag.style.transform = `translate(${moveX}mm, ${moveY}mm)`;
-
           faceBox.appendChild(imgTag);
         });
 
         document.getElementById('print-date').innerText =
           new Date().toLocaleString();
-
         const printItemsBody = document.getElementById('print-items-body');
-
         printItemsBody.innerHTML = '';
 
         const summary = {};
         let grandTotal = 0;
 
         scannedParts.forEach((p) => {
-          if (!summary[p.name]) {
-            summary[p.name] = { count: 0, totalPrice: 0 };
+          const currentName = assetsInfo[p.code].name;
+          if (!summary[currentName]) {
+            summary[currentName] = { count: 0, totalPrice: 0 };
           }
-          summary[p.name].count += 1;
-          summary[p.name].totalPrice += p.price;
+          summary[currentName].count += 1;
+          summary[currentName].totalPrice += p.price;
           grandTotal += p.price;
         });
 
         let finalTotalCount = 0;
-
         Object.entries(summary).forEach(([name, data]) => {
           finalTotalCount += data.count;
-
           printItemsBody.innerHTML += `
             <div class="print-row">
                 <span>${name} x${data.count}</span>
-                <span>${data.totalPrice.toLocaleString()}원</span>
+                <span>${data.totalPrice.toLocaleString()}${unitWon}</span>
             </div>
-        `;
+          `;
         });
 
         document.getElementById('print-total-count').innerText =
-          finalTotalCount + '개';
-        // 영수증 총 가격 바인딩
+          finalTotalCount + unitQty;
         document.getElementById('print-total-price-zone').innerText =
-          grandTotal.toLocaleString() + '원';
+          grandTotal.toLocaleString() + unitWon;
+
+        globalLangBox.style.display = 'none';
 
         setTimeout(() => {
           window.print();
@@ -737,6 +813,105 @@
         if (document.getElementById('screen-main').style.display === 'flex') {
           barcodeInput.focus();
         }
+      });
+
+      // 🌟 [교정 완료] 화면 전환 없이 그 자리에서 텍스트와 단위를 다시 한국어로 돌려놓는 함수
+      function changeToKorean() {
+        console.log('THE FAKE SHOP - Korean Mode Restored!');
+
+        // 1. 전역 접미사 및 금액 자막단위 한글로 리셋
+        currentLang = 'ko';
+        unitQty = '개';
+        unitWon = '원';
+        textModalTotal = '총 결제 금액: ';
+
+        // 2. 부품 에셋 정보망의 이름을 다시 순수 한글 명칭으로 복구
+        assetsInfo[2030999].name = '안유진의 눈';
+        assetsInfo[1392010].name = '오준현 교수님의 눈';
+        assetsInfo[5203344587].name = '신세경의 코';
+        assetsInfo[77588517748].name = '이도현의 입';
+        assetsInfo[30920].name = '비비의 점';
+
+        // 3. 고정 UI 엘리먼트 라벨 한글 복구
+        document.getElementById('text-touch-msg').innerText =
+          '화면을 터치해 주세요.';
+        document.getElementById('text-scan-title').innerText =
+          '상품 바코드를 스캔해 주세요';
+        document.getElementById('lbl-dash-name').innerText = '상품 이름';
+        document.getElementById('lbl-dash-qty').innerText = '수량';
+        document.getElementById('lbl-dash-price').innerText = '금액';
+        document.getElementById('btn-open-cart').innerText = '결제하기';
+        document.getElementById('text-modal-title').innerText =
+          '주문 리스트 확인';
+        document.getElementById('btn-final-pay').innerText = '최종 결제 진행';
+
+        // 4. 숨겨진 프린트 영수증 영역 한글 복구
+        document.getElementById('text-receipt-list-title').innerText =
+          '[구매 확정 목록]';
+        document.getElementById('text-receipt-total-qty').innerText = '총 수량';
+        document.getElementById('text-receipt-total-price').innerText =
+          '총 결제 금액';
+        document.getElementById('text-receipt-footer').innerHTML =
+          '귀하의 신원 데이터는 수집 완료되었습니다.<br />이용해 주셔서 감사합니다.';
+
+        // 5. 현재 사용자가 켜놓은 화면 상태에 따라 데이터 텍스트만 실시간 한글 오버라이트
+        if (document.getElementById('modal-cart').style.display === 'flex') {
+          const list = document.getElementById('cart-list');
+          list.innerHTML = '';
+
+          const summary = {};
+          let grandTotal = 0;
+
+          scannedParts.forEach((p) => {
+            const currentName = assetsInfo[p.code].name;
+            if (!summary[currentName]) {
+              summary[currentName] = { count: 0, totalPrice: 0 };
+            }
+            summary[currentName].count += 1;
+            summary[currentName].totalPrice += p.price;
+            grandTotal += p.price;
+          });
+
+          Object.entries(summary).forEach(([name, data]) => {
+            list.innerHTML += `
+              <div style="display:flex; justify-content:space-between; margin-bottom:1.5vh;">
+                  <span>${name} (${data.count}${unitQty})</span>
+                  <span style="color:var(--stroke-orange); font-weight:900;">${data.totalPrice.toLocaleString()}${unitWon}</span>
+              </div>
+            `;
+          });
+          document.getElementById('cart-total-price').innerText =
+            `${textModalTotal}${grandTotal.toLocaleString()}${unitWon}`;
+        } else {
+          updateDashboards();
+        }
+      }
+
+      // 🌟 [교정 완료] 영어를 다시 누를 때마다 기존 스크립트를 파괴하고 새 주입 코드를 강제 리로드하는 함수
+      function loadEnglishScript() {
+        // 이미 주입되어 있던 올드 스크립트 엘리먼트가 있다면 body에서 깨끗하게 지워버립니다.
+        const oldScript = document.getElementById('en-script');
+        if (oldScript) {
+          oldScript.remove();
+        }
+
+        // 새 브라우저 캐시 문제를 방지하기 위해 타임스탬프 값을 붙여 완전히 새로운 스크립트로 인식시킵니다.
+        const script = document.createElement('script');
+        script.id = 'en-script';
+        script.src = 'locale-en.js?v=' + Date.now();
+
+        document.body.appendChild(script);
+      }
+
+      // 언어 드롭다운 토글 제어 루틴
+      const languageBtn = document.querySelector('.language-btn');
+      languageBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        globalLangBox.classList.toggle('open');
+      });
+
+      document.addEventListener('click', () => {
+        globalLangBox.classList.remove('open');
       });
     </script>
   </body>
