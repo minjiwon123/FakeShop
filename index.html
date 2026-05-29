@@ -488,7 +488,7 @@
           id="btn-final-pay"
           onclick="actionPrintAndReset()"
         >
-          최종 결제 진행
+          결제하기
         </button>
       </div>
 
@@ -826,7 +826,7 @@
         document.getElementById('btn-open-cart').innerText = '결제하기';
         document.getElementById('text-modal-title').innerText =
           '주문 리스트 확인';
-        document.getElementById('btn-final-pay').innerText = '최종 결제 진행';
+        document.getElementById('btn-final-pay').innerText = '결제하기';
         document.getElementById('btn-top-back').innerText = textBtnBack;
 
         if (document.getElementById('modal-cart').style.display === 'flex') {
@@ -859,51 +859,58 @@
       const targetButtons =
         '.btn-pay-active, .btn-back-style, .language-btn, .language-item';
 
-      // 손가락이 단추에 닿는 순간 즉시 햅틱 락 가동
+      function addTouchEffect(target) {
+        const btn = target.closest(targetButtons);
+
+        if (btn) {
+          btn.classList.add('js-touched');
+        }
+      }
+
+      function removeTouchEffect(target) {
+        const btn = target.closest(targetButtons);
+
+        if (btn) {
+          setTimeout(() => {
+            btn.classList.remove('js-touched');
+          }, 80);
+        }
+      }
+
+      /* 터치 */
       document.addEventListener(
         'touchstart',
         (e) => {
-          const btn = e.target.closest(targetButtons);
-          if (btn) {
-            btn.classList.add('js-touched');
-          }
+          addTouchEffect(e.target);
         },
         { passive: true },
       );
 
-      // 손가락이 단추에서 떨어지는 순간 부드럽게 팝 복구
       document.addEventListener(
         'touchend',
         (e) => {
-          const btn = e.target.closest(targetButtons);
-          if (btn) {
-            setTimeout(() => btn.classList.remove('js-touched'), 60); // 찰나의 잔상을 주어 타격감 증폭
-          }
+          removeTouchEffect(e.target);
         },
         { passive: true },
       );
 
-      // 드래그해서 빗겨나갈 때 굳는 버그 방지
-      document.addEventListener(
-        'touchmove',
-        (e) => {
-          const btn = e.target.closest(targetButtons);
-          if (btn) {
-            // 터치 영역을 완전히 벗어나면 해제
-            const touch = e.touches[0];
-            const rect = btn.getBoundingClientRect();
-            if (
-              touch.clientX < rect.left ||
-              touch.clientX > rect.right ||
-              touch.clientY < rect.top ||
-              touch.clientY > rect.bottom
-            ) {
-              btn.classList.remove('js-touched');
-            }
-          }
-        },
-        { passive: true },
-      );
+      /* 마우스 */
+      document.addEventListener('mousedown', (e) => {
+        addTouchEffect(e.target);
+      });
+
+      document.addEventListener('mouseup', (e) => {
+        removeTouchEffect(e.target);
+      });
+
+      /* 터치모니터 */
+      document.addEventListener('pointerdown', (e) => {
+        addTouchEffect(e.target);
+      });
+
+      document.addEventListener('pointerup', (e) => {
+        removeTouchEffect(e.target);
+      });
     </script>
   </body>
 </html>
