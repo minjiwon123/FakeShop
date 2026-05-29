@@ -197,7 +197,7 @@
         font-weight: 700;
       }
 
-      /* 🌟 [수정] 결제하기 & 최종 결제 진행 버튼 터치 반응 최적화 잠금 해제 (!important 추가) */
+      /* 결제하기 / 최종 결제 진행 공통 스타일 */
       .btn-pay-active {
         background: var(--point-red) !important;
         color: #fff !important;
@@ -205,7 +205,7 @@
         padding: 2.2vh 3.5vh !important;
         border-radius: 2vh !important;
         font-size: 2.5vh !important;
-        cursor: pointer !important;
+        cursor: pointer;
         font-family: 'Jua', sans-serif !important;
         box-shadow: 0 6px 0px var(--stroke-orange) !important;
         transition:
@@ -213,10 +213,11 @@
           box-shadow 0.05s ease-out,
           background-color 0.05s ease-out !important;
         transform: translateY(0px);
+        -webkit-tap-highlight-color: transparent; /* 터치 시 푸르스름한 잔상 하이라이트 완전히 파괴 */
       }
 
-      /* 터치하고 있을 때 즉각 반응하도록 강력 고정 */
-      .btn-pay-active:active {
+      /* 🌟 [추가] 자바스크립트 햅틱 클래스 연동 가동 스펙 (결제류 버튼 전용 터치 작동 상태) */
+      .btn-pay-active.js-touched {
         background-color: var(--stroke-orange) !important;
         box-shadow: 0 2px 0px rgba(0, 0, 0, 0.2) !important;
         transform: translateY(4px) !important;
@@ -295,7 +296,7 @@
         z-index: 1300;
       }
 
-      /*이전으로 버튼 모듈 */
+      /* 이전으로 단추 스타일 */
       .btn-back-style {
         background: white !important;
         border: 3px solid var(--point-blue) !important;
@@ -303,7 +304,7 @@
         padding: 0.8vh 3.2vh !important;
         font-size: 2.2vh !important;
         font-weight: 700 !important;
-        cursor: pointer !important;
+        cursor: pointer;
         color: var(--stroke-orange) !important;
         box-shadow: 0 4px 0px rgba(0, 0, 0, 0.08) !important;
         letter-spacing: -0.05vw !important;
@@ -314,9 +315,12 @@
           color 0.05s ease-out !important;
         font-family: 'Jua', 'Fredoka', sans-serif !important;
         transform: translateY(0px);
+        -webkit-tap-highlight-color: transparent;
       }
 
-      .btn-back-style:active {
+      /* 🌟 [추가] 자바스크립트 햅틱 클래스 연동 가동 스펙 (이전으로 및 LANGUAGE 버튼 전용 터치 작동 상태) */
+      .btn-back-style.js-touched,
+      .language-btn.js-touched {
         background-color: var(--point-blue) !important;
         color: white !important;
         box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1) !important;
@@ -331,7 +335,7 @@
         z-index: 1300;
       }
 
-      /* LANGUAGE 대가리 메인 단추 */
+      /* LANGUAGE 메인 버튼 */
       .language-btn {
         background: white !important;
         border: 3px solid var(--point-blue) !important;
@@ -339,7 +343,7 @@
         padding: 0.8vh 2.5vh !important;
         font-size: 2.2vh !important;
         font-weight: 700 !important;
-        cursor: pointer !important;
+        cursor: pointer;
         color: var(--stroke-orange) !important;
         box-shadow: 0 4px 0px rgba(0, 0, 0, 0.08) !important;
         letter-spacing: 0.05vw !important;
@@ -350,13 +354,7 @@
           color 0.05s ease-out !important;
         font-family: 'Jua', 'Fredoka', sans-serif !important;
         transform: translateY(0px);
-      }
-
-      .language-btn:active {
-        background-color: var(--point-blue) !important;
-        color: white !important;
-        box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1) !important;
-        transform: translateY(3px) !important;
+        -webkit-tap-highlight-color: transparent;
       }
 
       .language-menu {
@@ -370,10 +368,10 @@
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
       }
 
-      /* 🌟 [수정] 한국어 / ENGLISH 드롭다운 메뉴 아이템 터치 햅틱 반응 장치 */
+      /* 드롭다운 항목 단추 */
       .language-item {
         padding: 1.2vh 2vh !important;
-        cursor: pointer !important;
+        cursor: pointer;
         color: var(--text-dark) !important;
         font-size: 2vh !important;
         font-weight: 700 !important;
@@ -383,10 +381,11 @@
           color 0.05s ease-out !important;
         text-align: center !important;
         font-family: 'Jua', 'Fredoka', sans-serif !important;
+        -webkit-tap-highlight-color: transparent;
       }
 
-      /* 드롭다운 리스트 항목 손가락 터치 순간 강렬한 반전 피드백 연출 */
-      .language-item:active {
+      /* 🌟 [추가] 자바스크립트 햅틱 클래스 연동 가동 스펙 (한국어/ENGLISH 리스트 전용 터치 작동 상태) */
+      .language-item.js-touched {
         background-color: var(--point-red) !important;
         color: white !important;
       }
@@ -854,6 +853,57 @@
       document.addEventListener('click', () => {
         globalLangBox.classList.remove('open');
       });
+
+      // 🌟 [추가] 터치스크린 전용 초정밀 전역 햅틱 트래킹 매니저 주입
+      // 이 스크립트가 300ms 딜레이를 무시하고 살결이 닿는 즉시 강제로 애니메이션 클래스를 켜고 꺼줍니다.
+      const targetButtons =
+        '.btn-pay-active, .btn-back-style, .language-btn, .language-item';
+
+      // 손가락이 단추에 닿는 순간 즉시 햅틱 락 가동
+      document.addEventListener(
+        'touchstart',
+        (e) => {
+          const btn = e.target.closest(targetButtons);
+          if (btn) {
+            btn.classList.add('js-touched');
+          }
+        },
+        { passive: true },
+      );
+
+      // 손가락이 단추에서 떨어지는 순간 부드럽게 팝 복구
+      document.addEventListener(
+        'touchend',
+        (e) => {
+          const btn = e.target.closest(targetButtons);
+          if (btn) {
+            setTimeout(() => btn.classList.remove('js-touched'), 60); // 찰나의 잔상을 주어 타격감 증폭
+          }
+        },
+        { passive: true },
+      );
+
+      // 드래그해서 빗겨나갈 때 굳는 버그 방지
+      document.addEventListener(
+        'touchmove',
+        (e) => {
+          const btn = e.target.closest(targetButtons);
+          if (btn) {
+            // 터치 영역을 완전히 벗어나면 해제
+            const touch = e.touches[0];
+            const rect = btn.getBoundingClientRect();
+            if (
+              touch.clientX < rect.left ||
+              touch.clientX > rect.right ||
+              touch.clientY < rect.top ||
+              touch.clientY > rect.bottom
+            ) {
+              btn.classList.remove('js-touched');
+            }
+          }
+        },
+        { passive: true },
+      );
     </script>
   </body>
 </html>
