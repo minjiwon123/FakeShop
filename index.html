@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>THE FAKE SHOP / 2026</title>
+
+    <style>
+      /* 둥글둥글하고 통통한 느낌의 구글 폰트(Jua, Fredoka) 로드 */
+      @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Jua&family=Montserrat:wght@700;900&display=swap');
+
+      :root {
+        /* 🎨 새 포스터 기반 팝&키치 파스텔 컬러 바인딩 */
+        --main-yellow: #fbf9e6; /* 부드러운 밀크 아이보리 배경 */
+        --point-red: #f15a31; /* 타이틀 외곽선의 다홍빛 오렌지 레드 */
+        --stroke-orange: #d74b29; /* 딥 오렌지 브라운 */
+        --point-blue: #7cb8f7; /* 포스터 타이틀 내부의 상큼한 스카이 블루 */
+        --text-dark: #222222;
+      }
+
+      body,
+      html {
+        background: #000;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        font-family: 'Jua', 'Fredoka', sans-serif;
+        overflow: hidden;
+      }
+
+      #kiosk-frame {
+        width: 100%;
+        height: 100vh;
+        position: relative;
+        background: var(--main-yellow);
+        overflow: hidden;
+        cursor: pointer;
+      }
+
+      #video-background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+      }
+
+      #screen-start {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* 텍스트 스타일 원본 보존 */
+      .touch-msg {
+        font-size: 3.2vh;
+        font-weight: 400;
+        text-align: center;
+        color: #000;
+      }
+
+      #screen-main {
+        display: none;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: var(--main-yellow);
+        z-index: 1100;
+      }
+
+      .scan-header {
+        width: 100%;
+        padding: 6vh 0 2vh 0;
+        text-align: center;
+      }
+
+      /* 상단 메인 타이틀: 겉외곽선 매커니즘 */
+      .scan-title {
+        font-size: 4.5vh;
+        color: var(--main-yellow);
+        margin: 0;
+        letter-spacing: 0.1vh;
+        font-weight: 900;
+        text-shadow:
+          -1.5px -1.5px 0 var(--stroke-orange),
+          1.5px -1.5px 0 var(--stroke-orange),
+          -1.5px 1.5px 0 var(--stroke-orange),
+          1.5px 1.5px 0 var(--stroke-orange),
+          0px -1.5px 0 var(--stroke-orange),
+          0px 1.5px 0 var(--stroke-orange),
+          -1.5px 0px 0 var(--stroke-orange),
+          1.5px 0px 0 var(--stroke-orange);
+      }
+
+      #canvas-container {
+        margin: 1vh auto;
+        width: 65vh;
+        height: 65vh;
+        max-width: 90vw;
+        border: 5px dashed var(--stroke-orange);
+        border-radius: 3vh;
+        box-sizing: border-box;
+        background: rgba(255, 255, 255, 0.4);
+      }
+
+      canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      /* 하단 대시보드 (파란색 확장 배치) */
+      .scan-dashboard {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 20vh;
+        background: var(--point-blue);
+        color: #fff;
+        display: flex;
+        padding: 1.5vh 0;
+        box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .dash-section {
+        flex: 1.2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        border-right: 1px solid rgba(255, 255, 255, 0.4);
+        padding-top: 1vh;
+      }
+      .dash-section:nth-child(2) {
+        flex: 0.6;
+      } /* 수량 구획 크기 압축 */
+      .dash-section:nth-child(3) {
+        flex: 1.2;
+      } /* 금액 구획 공간 확보 */
+      .dash-section:last-child {
+        border-right: none;
+        flex: 1.3;
+      }
+
+      /* 대시보드 라벨 외곽선 */
+      .dash-label {
+        font-size: 2vh;
+        color: var(--main-yellow);
+        margin-bottom: 1.5vh;
+        font-weight: 900;
+        text-shadow:
+          -1px -1px 0 var(--stroke-orange),
+          1px -1px 0 var(--stroke-orange),
+          -1px 1px 0 var(--stroke-orange),
+          1px 1px 0 var(--stroke-orange),
+          0px -1px 0 var(--stroke-orange),
+          0px 1px 0 var(--stroke-orange),
+          -1px 0px 0 var(--stroke-orange),
+          1px 0px 0 var(--stroke-orange);
+      }
+
+      .list-container {
+        width: 90%;
+        height: 12vh;
+        overflow-y: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8vh;
+        font-size: 2.1vh;
+        text-align: center;
+        color: var(--text-dark);
+      }
+
+      .qty-row,
+      .price-row {
+        color: var(--stroke-orange);
+        font-weight: 700;
+      }
+
+      .btn-pay-active {
+        background: var(--point-red);
+        color: #fff;
+        border: 3px solid #fff;
+        padding: 2.2vh 4vh;
+        border-radius: 2vh;
+        font-size: 2.6vh;
+        cursor: pointer;
+        font-family: 'Jua', sans-serif;
+        box-shadow: 0 4px 0px rgba(0, 0, 0, 0.1);
+      }
+
+      .modal {
+        display: none;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: var(--main-yellow);
+        z-index: 1200;
+      }
+
+      /* 주문 리스트 확인 모달 타이틀 */
+      .modal-title {
+        font-size: 6vh;
+        margin-bottom: 4vh;
+        color: var(--main-yellow);
+        font-weight: 900;
+        text-shadow:
+          -2px -2px 0 var(--stroke-orange),
+          2px -2px 0 var(--stroke-orange),
+          -2px 2px 0 var(--stroke-orange),
+          2px 2px 0 var(--stroke-orange),
+          0px -2px 0 var(--stroke-orange),
+          0px 2px 0 var(--stroke-orange),
+          -2px 0px 0 var(--stroke-orange),
+          2px 0px 0 var(--stroke-orange);
+      }
+
+      #cart-list {
+        width: 65%;
+        background: white;
+        padding: 3vh 4vh;
+        border: 4px solid var(--point-blue);
+        border-radius: 2.5vh;
+        color: var(--text-dark);
+        margin-bottom: 4vh;
+        font-size: 2.4vh;
+        max-height: 40vh;
+        overflow-y: auto;
+      }
+
+      /* 장바구니 내 총 합계 출력 라벨 무드 */
+      .cart-total-bar {
+        width: 65%;
+        text-align: right;
+        font-size: 3.2vh;
+        color: var(--stroke-orange);
+        margin-bottom: 4vh;
+        font-weight: 900;
+      }
+
+      #barcode-input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* 평소에는 숨김 */
+      #print-receipt-zone {
+        display: none;
+      }
+
+      /* ===========================
+         PRINT 
+      =========================== */
+      @media print {
+        @page {
+          size: 58mm auto;
+          margin: 0;
+        }
+
+        body {
+          background: white !important;
+          font-family: monospace !important;
+        }
+
+        #kiosk-frame,
+        #screen-main,
+        #modal-cart,
+        #video-background,
+        #screen-start {
+          display: none !important;
+        }
+
+        #print-receipt-zone {
+          display: block !important;
+          width: 46mm !important;
+          margin: 0 !important;
+          padding: 10mm 3mm 10mm 3mm !important;
+          box-sizing: border-box !important;
+          color: #000 !important;
+          background: #fff !important;
+          font-family: monospace;
+          font-size: 11px;
+          line-height: 1.4;
+          position: relative !important;
+          left: -1mm !important;
+        }
+
+        .print-title {
+          text-align: center;
+          font-size: 16px;
+          font-weight: bold;
+          margin: 10px 0 2px 0;
+        }
+
+        .print-divider {
+          border-top: 1px dashed #000;
+          margin: 8px 0;
+        }
+
+        .receipt-face-wrapper {
+          position: relative !important;
+          width: 54mm !important;
+          height: 54mm !important;
+          margin-top: 6mm !important;
+          margin-bottom: 6mm !important;
+          margin-left: -6mm !important;
+          overflow: hidden !important;
+          background: #fff !important;
+          filter: grayscale(1) contrast(1.6) !important;
+        }
+
+        .receipt-base-img {
+          width: 100% !important;
+          height: 100% !important;
+          display: block !important;
+          object-fit: cover !important;
+        }
+
+        .receipt-part-img {
+          position: absolute !important;
+          width: 48mm !important;
+          height: 48mm !important;
+          top: 0 !important;
+          left: 0 !important;
+          object-fit: cover !important;
+          transform-origin: top left !important;
+          mix-blend-mode: multiply !important;
+          filter: grayscale(1) brightness(0) contrast(999) !important;
+          image-rendering: pixelated !important;
+        }
+
+        .print-row {
+          display: flex;
+          justify-content: space-between;
+          margin: 4px 0;
+          font-size: 11px;
+        }
+
+        .print-footer {
+          text-align: center;
+          margin-top: 15px;
+          font-size: 10px;
+        }
+
+        .cut-space {
+          height: 20mm;
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="kiosk-frame">
+      <video id="video-background" autoplay muted loop playsinline>
+        <source src="intro_video.mp4" type="video/mp4" />
+      </video>
+
+      <div id="screen-start" onclick="startKiosk()">
+        <div class="touch-msg">화면을 터치해 주세요.</div>
+      </div>
+
+      <div id="screen-main">
+        <div class="scan-header">
+          <h1 class="scan-title">상품 바코드를 스캔해 주세요</h1>
+        </div>
+
+        <div id="canvas-container">
+          <canvas id="faceCanvas" width="1280" height="1280"></canvas>
+        </div>
+
+        <div class="scan-dashboard">
+          <div class="dash-section">
+            <div class="dash-label">상품 이름</div>
+            <div id="dash-name-list" class="list-container"></div>
+          </div>
+
+          <div class="dash-section">
+            <div class="dash-label">수량</div>
+            <div id="dash-qty-list" class="list-container"></div>
+          </div>
+
+          <div class="dash-section">
+            <div class="dash-label">금액</div>
+            <div id="dash-price-list" class="list-container"></div>
+          </div>
+
+          <div class="dash-section">
+            <button class="btn-pay-active" onclick="openCart()">
+              결제하기
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-cart" class="modal">
+        <h1 class="modal-title">주문 리스트 확인</h1>
+
+        <div id="cart-list"></div>
+
+        <div class="cart-total-bar" id="cart-total-price">
+          총 결제 금액: 0원
+        </div>
+
+        <button class="btn-pay-active" onclick="actionPrintAndReset()">
+          최종 결제 진행
+        </button>
+      </div>
+
+      <input type="text" id="barcode-input" />
+    </div>
+
+    <div id="print-receipt-zone">
+      <div class="print-title">THE FAKE SHOP</div>
+
+      <div style="text-align: center; font-size: 9px" id="print-date"></div>
+
+      <div class="print-divider"></div>
+
+      <div class="receipt-face-wrapper" id="receipt-face-box">
+        <img
+          class="receipt-base-img"
+          src="assets/base_face.png"
+          alt="베이스 얼굴"
+        />
+      </div>
+
+      <div class="print-divider"></div>
+
+      <div style="font-weight: bold; margin-bottom: 5px">[구매 확정 목록]</div>
+
+      <div id="print-items-body"></div>
+
+      <div class="print-divider"></div>
+
+      <div class="print-row" style="font-weight: bold; font-size: 12px">
+        <span>총 수량</span>
+        <span id="print-total-count">0개</span>
+      </div>
+      <div
+        class="print-row"
+        style="font-weight: bold; font-size: 13px; margin-top: 2px"
+      >
+        <span>총 결제 금액</span>
+        <span id="print-total-price-zone">0원</span>
+      </div>
+
+      <div class="print-divider"></div>
+
+      <div class="print-footer">
+        귀하의 신원 데이터는 수집 완료되었습니다.<br />
+        이용해 주셔서 감사합니다.
+      </div>
+      <div class="cut-space"></div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById('faceCanvas');
+      const ctx = canvas.getContext('2d');
+      const barcodeInput = document.getElementById('barcode-input');
+
+      let scannedParts = [];
+
+      // 💰 각 부품 정체성에 매칭되는 위트 있는 단가(Price) 데이터 삽입
+      const assetsInfo = {
+        2030999: {
+          name: '안유진의 눈',
+          type: 'eye',
+          src: 'assets/eye_yujin.png',
+          price: 15000,
+        },
+
+        1392010: {
+          name: '오준현 교수님의 눈',
+          type: 'eye',
+          src: 'assets/eye_prof.png',
+          price: 15000,
+        },
+
+        5203344587: {
+          name: '신세경의 코',
+          type: 'nose',
+          src: 'assets/nose_sekyung.png',
+          price: 15000,
+        },
+
+        77588517748: {
+          name: '이도현의 입',
+          type: 'mouth',
+          src: 'assets/mouth_dohyun.png',
+          price: 15000,
+        },
+
+        30920: {
+          name: '비비의 점',
+          type: 'mole',
+          src: 'assets/mole_bibi.png',
+          price: 3000,
+        },
+      };
+
+      const baseImg = new Image();
+      baseImg.src = 'assets/base_face.png';
+
+      const loadedImages = {};
+
+      Object.keys(assetsInfo).forEach((code) => {
+        const img = new Image();
+        img.src = assetsInfo[code].src;
+
+        loadedImages[code] = img;
+
+        img.onload = draw;
+      });
+
+      function startKiosk() {
+        document.getElementById('screen-start').style.display = 'none';
+
+        const main = document.getElementById('screen-main');
+
+        main.style.display = 'flex';
+
+        barcodeInput.focus();
+
+        draw();
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, 1280, 1280);
+
+        if (baseImg.complete) {
+          const scale = Math.max(1280 / baseImg.width, 1280 / baseImg.height);
+
+          const x = (1280 - baseImg.width * scale) / 2;
+          const y = (1280 - baseImg.height * scale) / 2;
+
+          ctx.drawImage(
+            baseImg,
+            x,
+            y,
+            baseImg.width * scale,
+            baseImg.height * scale,
+          );
+        }
+
+        scannedParts.forEach((part) => {
+          const img = loadedImages[part.code];
+
+          if (img && img.complete) {
+            ctx.drawImage(img, part.randomX, part.randomY, 1280, 1280);
+          }
+        });
+      }
+
+      barcodeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const val = e.target.value.replace(/\s/g, '').trim();
+
+          console.log('스캔값:', val);
+
+          const info = assetsInfo[val];
+
+          if (info) {
+            scannedParts.push({
+              code: val,
+              name: info.name,
+              price: info.price, // 가격 정보 바인딩
+
+              randomX: (Math.random() - 0.5) * 180,
+
+              randomY: (Math.random() - 0.5) * 300,
+            });
+
+            updateDashboards();
+
+            draw();
+
+            console.log('추가 완료');
+          } else {
+            console.log('없는 바코드');
+          }
+
+          e.target.value = '';
+        }
+      });
+
+      function updateDashboards() {
+        const nameDiv = document.getElementById('dash-name-list');
+        const qtyDiv = document.getElementById('dash-qty-list');
+        const priceDiv = document.getElementById('dash-price-list');
+
+        const summary = {};
+
+        scannedParts.forEach((p) => {
+          if (!summary[p.name]) {
+            summary[p.name] = { count: 0, totalPrice: 0 };
+          }
+          summary[p.name].count += 1;
+          summary[p.name].totalPrice += p.price;
+        });
+
+        nameDiv.innerHTML = '';
+        qtyDiv.innerHTML = '';
+        priceDiv.innerHTML = '';
+
+        Object.entries(summary).forEach(([name, data]) => {
+          nameDiv.innerHTML += `<div>${name}</div>`;
+          qtyDiv.innerHTML += `<div class="qty-row">${data.count}개</div>`;
+          priceDiv.innerHTML += `<div class="price-row">${data.totalPrice.toLocaleString()}원</div>`;
+        });
+      }
+
+      function openCart() {
+        document.getElementById('screen-main').style.display = 'none';
+
+        const list = document.getElementById('cart-list');
+
+        list.innerHTML = '';
+
+        const summary = {};
+        let grandTotal = 0;
+
+        scannedParts.forEach((p) => {
+          if (!summary[p.name]) {
+            summary[p.name] = { count: 0, totalPrice: 0 };
+          }
+          summary[p.name].count += 1;
+          summary[p.name].totalPrice += p.price;
+          grandTotal += p.price;
+        });
+
+        Object.entries(summary).forEach(([name, data]) => {
+          list.innerHTML += `
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                margin-bottom:1.5vh;
+            ">
+                <span>${name} (${data.count}개)</span>
+                <span style="color:var(--stroke-orange); font-weight:900;">${data.totalPrice.toLocaleString()}원</span>
+            </div>
+        `;
+        });
+
+        // 모달창 총 결제금액 세팅
+        document.getElementById('cart-total-price').innerText =
+          `총 결제 금액: ${grandTotal.toLocaleString()}원`;
+        document.getElementById('modal-cart').style.display = 'flex';
+      }
+
+      function actionPrintAndReset() {
+        const faceBox = document.getElementById('receipt-face-box');
+
+        const oldParts = faceBox.querySelectorAll('.receipt-part-img');
+
+        oldParts.forEach((el) => el.remove());
+
+        scannedParts.forEach((part) => {
+          const imgTag = document.createElement('img');
+
+          imgTag.className = 'receipt-part-img';
+
+          imgTag.src = assetsInfo[part.code].src;
+
+          const scaleRatio = 48 / 1280;
+
+          const moveX = part.randomX * scaleRatio;
+          const moveY = part.randomY * scaleRatio;
+
+          imgTag.style.transform = `translate(${moveX}mm, ${moveY}mm)`;
+
+          faceBox.appendChild(imgTag);
+        });
+
+        document.getElementById('print-date').innerText =
+          new Date().toLocaleString();
+
+        const printItemsBody = document.getElementById('print-items-body');
+
+        printItemsBody.innerHTML = '';
+
+        const summary = {};
+        let grandTotal = 0;
+
+        scannedParts.forEach((p) => {
+          if (!summary[p.name]) {
+            summary[p.name] = { count: 0, totalPrice: 0 };
+          }
+          summary[p.name].count += 1;
+          summary[p.name].totalPrice += p.price;
+          grandTotal += p.price;
+        });
+
+        let finalTotalCount = 0;
+
+        Object.entries(summary).forEach(([name, data]) => {
+          finalTotalCount += data.count;
+
+          printItemsBody.innerHTML += `
+            <div class="print-row">
+                <span>${name} x${data.count}</span>
+                <span>${data.totalPrice.toLocaleString()}원</span>
+            </div>
+        `;
+        });
+
+        document.getElementById('print-total-count').innerText =
+          finalTotalCount + '개';
+        // 영수증 총 가격 바인딩
+        document.getElementById('print-total-price-zone').innerText =
+          grandTotal.toLocaleString() + '원';
+
+        setTimeout(() => {
+          window.print();
+        }, 500);
+
+        window.onafterprint = () => {
+          location.reload();
+        };
+      }
+
+      document.addEventListener('click', () => {
+        if (document.getElementById('screen-main').style.display === 'flex') {
+          barcodeInput.focus();
+        }
+      });
+    </script>
+  </body>
+</html>
