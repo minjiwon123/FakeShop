@@ -197,14 +197,14 @@
         font-weight: 700;
       }
 
-      /* 🌟 [수정] 결제하기 버튼 크기 날씬하고 콤팩트하게 다듬기 */
+      /* 결제하기 버튼 크기 슬림 밸런스 */
       .btn-pay-active {
         background: var(--point-red) !important;
         color: #fff !important;
         border: 3px solid #fff !important;
-        padding: 1.5vh 3vh !important; /* 👈 세로 padding 2.2vh ➡️ 1.5vh로 줄여서 날씬하게 조절 */
+        padding: 1.5vh 3vh !important;
         border-radius: 2vh !important;
-        font-size: 2.3vh !important; /* 👈 글자 크기 살짝만 줄여서 비율 밸런싱 */
+        font-size: 2.3vh !important;
         cursor: pointer;
         font-family: 'Jua', sans-serif !important;
         box-shadow: 0 5px 0px var(--stroke-orange) !important;
@@ -219,9 +219,7 @@
       .btn-pay-active.js-touched {
         background-color: var(--stroke-orange) !important;
         box-shadow: 0 2px 0px rgba(0, 0, 0, 0.2) !important;
-        transform: translateY(
-          3px
-        ) !important; /* 압축 비율에 맞춰 터치 다운 높이 조절 */
+        transform: translateY(3px) !important;
       }
 
       .modal {
@@ -513,36 +511,117 @@
 
       let scannedParts = [];
 
+      // 🌟 [성분 명세 스펙 업데이트 완료]
       const assetsInfo = {
         2030999: {
           name: '안유진의 눈',
           type: 'eye',
           src: 'assets/eye_yujin.png',
           price: 2748000,
+          desc: {
+            ko: '맑고 또렷한 시선에 균형 잡힌 간격이 더해진, 밝은 인상의 정석 비율 눈. 과하지 않은 여백이 자연스럽게 생기를 살려주는 아이 타입입니다.',
+            en: 'A textbook-ratio eye with a clear, sharp gaze and perfectly balanced spacing. An eye type that naturally revitalizes the look with moderate negative space.',
+          },
+          effect: {
+            ko: '눈의 중심 간격을 부드럽게 정돈하여 시원하고 개방감 있는 인상 연출<br>초롱초롱한 강아지 같은 눈빛으로 자연스럽게 호감도를 끌어올림<br>밝고 당당한 에너지로 주변 분위기를 부드럽게 만드는 효과',
+            en: 'Softly aligns the inner eye distance to create a refreshing and open impression.<br>Naturally boosts likability with sparkling, puppy-like eyes.<br>Softens the surrounding atmosphere with bright, confident energy.',
+          },
+          ingredients: {
+            ko: '타인의 기대치, 미디어 노출 빈도, 호감 유발 물질, 순수함 인식 인자, 또래 비교 지수, 각막 곡률 지수, 공막 노출 면적, 주목도 자극 성분, 자기 검열, 동공 반사율, 잔상 지속 성분, 첫인상 형성 인자, 감정 투영 물질, 시선 집중 유발제, 귀여움 연상 성분, 신뢰도 상승 인자, 호기심 유발 물질, 미확인 매력 물질, 기타 불명 성분',
+            en: "Others' Expectations, Media Exposure Frequency, Likability Inducer, Pureness Recognition Factor, Peer Comparison Index, Corneal Curvature Index, Scleral Exposure Area, Attention Stimulant, Self-Censorship, Pupil Reflectivity, Afterimage Persistence Component, First Impression Factor, Emotion Projection Substance, Gaze Concentrator, Cuteness-Associating Component, Trust Booster, Curiosity Inducer, Unidentified Charm Element, Other Unknown Components",
+          },
+          caution: {
+            ko: '과도한 확장 적용 시 인상이 흐릿해 보일 수 있습니다.<br>개인의 눈 구조에 따라 또렷함의 강도가 다르게 표현될 수 있습니다.',
+            en: 'Excessive enlargement may blur the overall look.<br>Clarity intensity may vary depending on individual eye anatomy.',
+          },
         },
         1392010: {
           name: '오준현 교수님의 눈',
           type: 'eye',
           src: 'assets/eye_prof.png',
           price: 549000,
+          desc: {
+            ko: '깊은 연륜과 정제된 학술적 안목이 담겨있는 정석 비율의 지성형 눈.',
+            en: 'A classic intellectual eye carrying profound experience and a refined academic perspective.',
+          },
+          effect: {
+            ko: '마주하는 이에게 차분한 신뢰도와 묵직한 카리스마 전달',
+            en: 'Conveys calm reliability and heavy charisma to anyone met.',
+          },
+          ingredients: {
+            ko: '과제 평가 기준 지표, 학점 분배 원소, 전공 지식 농축액, 날카로운 피드백 인자, 연구실 압박 인자, 인내심 용액',
+            en: 'Assignment Criteria Index, Credit Allocation Element, Concentrated Major Knowledge, Sharp Feedback Factor, Lab Pressure, Patience Solution',
+          },
+          caution: {
+            ko: '스캔 시 교수님과의 면담이 즉시 스케줄링 될 위험이 있습니다.',
+            en: 'Scanning may immediately prompt a counseling schedule with the professor.',
+          },
         },
         5203344587: {
           name: '신세경의 코',
           type: 'nose',
           src: 'assets/nose_sekyung.png',
           price: 142000,
+          desc: {
+            ko: '부드러운 곡선과 안정적인 코끝이 조화를 이루는, 자연스러움의 정석 비율 코. 얼굴 전체의 균형을 살리며 단정하면서도 세련된 인상을 완성해주는 코 타입입니다.',
+            en: 'A textbook-ratio nose of naturalness, harmony of gentle curves and stable tip. Enhances overall facial balance and completes a neat, sophisticated look.',
+          },
+          effect: {
+            ko: '부드럽게 이어지는 콧대 라인으로 얼굴 중심을 안정감 있게 정돈<br>과하게 날카롭지 않은 코끝이 차분하고 신뢰감 있는 인상 형성<br>은은한 입체감으로 자연스럽고 고급스러운 분위기 연출',
+            en: 'Gently aligns the nasal bridge to secure facial center stability.<br>The moderately soft tip creates a calm, trustworthy impression.<br>Creates a sophisticated mood with subtle volume.',
+          },
+          ingredients: {
+            ko: '안정적 중심축 형성 인자, 자연 곡률 유지 성분, 과잉 입체감 억제 물질, 단아함 강화 인자, 부드러운 인상 유도 성분, 균형 비율 조절제, 조용한 세련미 성분, 얼굴 조화 유지 인자, 무자극 입체감 형성 물질, 은은한 존재감 유발 성분, 신뢰도 상승 인자, 시선 안정화 성분, 과장 제거 물질, 첫인상 정돈 인자, 편안한 분위기 형성 성분, 정제된 이미지 유지제, 자연스러운 입체감 조절 인자, 잔잔한 고급감 형성 물질',
+            en: 'Stable Axis-Forming Factor, Natural Curvature Preservative, Excessive Volume Suppressor, Neatness Intensifier, Soft Impression Inducer, Balance Ratio Regulator, Quiet Sophistication Element, Facial Harmony Keeper, Irritation-Free Volume Former, Subtle Presence Inducer, Trust Booster, Gaze Stabilizer, Exaggeration Filter, First Impression Organizer, Comfort Mood Creator, Refined Image Sustainer, Natural Volume Adjuster, Pure Luxury Creator',
+          },
+          caution: {
+            ko: '과도한 높이 또는 과장된 직선 적용 시 부드러운 균형감이 손상될 수 있습니다.<br>지속 사용 시 ‘꾸미지 않았는데 세련돼 보인다’는 평가를 반복 수신할 수 있습니다.',
+            en: "Excessive height or sharp straightness may damage the gentle balance.<br>Continuous use may trigger repetitive praises like 'effortlessly elegant'.",
+          },
         },
         77588517748: {
           name: '이도현의 입',
           type: 'mouth',
           src: 'assets/mouth_dohyun.png',
           price: 156000,
+          desc: {
+            ko: '또렷한 윤곽과 균형 잡힌 볼륨이 조화를 이루는, 담백한 매력의 정석 비율 입술. 과하지 않은 두께감이 자연스럽게 표정을 살려주며, 부드러우면서도 신뢰감 있는 인상을 완성해줍니다.',
+            en: 'A textbook-ratio mouth of neat charm, displaying balanced contours and volume. Moderate thickness naturally enlivens expressions, creating a soft, trustworthy look.',
+          },
+          effect: {
+            ko: '말하지 않아도 안정감 있는 분위기를 형성하여 편안한 인상 연출<br>웃을 때 자연스럽게 살아나는 입꼬리 라인으로 부드러운 호감도 상승<br>정돈된 윤곽으로 차분하고 성숙한 이미지를 자연스럽게 형성하는 효과',
+            en: 'Forms a stable aura effortlessly to present a comfortable look.<br>Boosts likability with lip corners that naturally rise when smiling.<br>Shapes a calm, mature image through tidy lip lines.',
+          },
+          ingredients: {
+            ko: '잔잔한 분위기 형성 물질, 담백한 매력 유지 성분, 과도한 화려함 억제 인자, 안정감 전달 성분, 자연 표정 활성 물질, 윤곽 선명도 유지제, 부드러운 무게감 형성 인자, 조용한 호감 유발 성분, 성숙 이미지 강화 물질, 긴장 완화 인자, 은은한 감정 전달 성분, 과장 억제 볼륨 성분, 균형 잡힌 입꼬리 조절제, 편안한 인상 유지 인자, 대화 집중 유도 물질, 자연스러운 분위기 증폭 성분, 미세 감정 반사 물질, 신뢰감 잔류 성분, 무의식적 안정 유발 인자',
+            en: 'Calm Vibe Creator, Plain Charm Holder, Flashiness Suppressor, Stability Transmitter, Natural Expression Activator, Contour Sharpness Keeper, Soft Weight Former, Quiet Attraction Inducer, Maturity Intensifier, Tension Reliever, Subtle Emotion Transmitter, Volume Controller, Balanced Mouth Corner Adjuster, Comfort Expression Sustainer, Conversation Magnet, Natural Aura Amplifier, Micro-Emotion Reflector, Reliability Residue, Involuntary Stability Inducer',
+          },
+          caution: {
+            ko: '지나친 윤곽 강조는 자연스러운 부드러움 대신 인위적인 인상을 유발할 수 있습니다.<br>지속 사용 시 ‘말을 차분하게 잘할 것 같다’는 오해를 반복적으로 받을 수 있습니다.',
+            en: "Over-emphasizing contours may prompt an artificial look instead of softness.<br>Continuous use may incur frequent assumptions like 'fluent and articulate speaker'.",
+          },
         },
         30920: {
           name: '비비의 점',
           type: 'mole',
           src: 'assets/mole_bibi.png',
           price: 53000,
+          desc: {
+            ko: '작은 포인트로 강한 인상을 남기는, 개성의 시그니처 디테일. 과하지 않은 위치와 크기가 자연스럽게 시선을 끌며 얼굴 전체에 유니크한 분위기를 더해줍니다.',
+            en: 'A signature detail of individuality that leaves a powerful impression with a single speck. Moderately placed to attract gazes and coat a unique aura.',
+          },
+          effect: {
+            ko: '무심한 표정에서도 시선이 머무는 강한 잔상 형성<br>작은 디테일만으로 얼굴 전체의 분위기를 개성 있게 전환<br>은은한 반항기와 자유로운 이미지를 동시에 강화하는 효과',
+            en: 'Leaves a strong afterimage where eyes linger even on expressionless faces.<br>Uniquely shifts the entire facial mood with just a minor touch.<br>Simultaneously triggers mild rebelliousness and free-spirited images.',
+          },
+          ingredients: {
+            ko: '유니크 인상 강화 물질, 잔상 지속 성분, 시선 체류 유도 인자, 무심한 분위기 형성 물질, 자유로운 이미지 활성 성분, 미세 개성 증폭 인자, 반항적 무드 형성 성분, 자연 시선 집중 유발제, 비정형 매력 물질, 얼굴 리듬 변화 인자, 캐릭터성 강화 성분, 무드 잔류 물질, 분위기 왜곡 인자, 예상 불가 이미지 형성 성분, 시선 재방문 유발 물질, 미세 긴장감 조절 성분, 감각적 디테일 유지제, 비표준 호감 형성 인자',
+            en: 'Unique Impression Booster, Afterimage Enhancer, Gaze Detainer, Casual Vibe Component, Liberty Image Activator, Micro-Individuality Amplifier, Rebellious Aura Element, Natural Eye Catcher, Irregular Charm Element, Facial Rhythm Alterer, Character Intensifier, Mood Residue, Aura Distorter, Unpredictable Image Shaper, Re-visit Inducer, Tension Controller, Sensual Detail Sustainer, Non-Standard Attraction Factor',
+          },
+          caution: {
+            ko: '과도한 크기 적용 시 본 제품 특유의 자연스러운 포인트 감각이 감소할 수 있습니다.<br>지속 사용 시 ‘왠지 계속 기억나는 얼굴’이라는 반응을 반복 유발할 수 있습니다.',
+            en: "Excessive sizing may damage the natural point aesthetics.<br>Continuous use may trigger responses like 'somehow unforgettable face'.",
+          },
         },
       };
 
@@ -712,7 +791,10 @@
         let itemsListHTML = '';
         const summary = {};
         let grandTotal = 0;
+        const uniqueProductCodes = new Set();
+
         scannedParts.forEach((p) => {
+          uniqueProductCodes.add(p.code);
           const currentName = assetsInfo[p.code].name;
           if (!summary[currentName]) {
             summary[currentName] = { count: 0, totalPrice: 0 };
@@ -726,6 +808,29 @@
         Object.entries(summary).forEach(([name, data]) => {
           finalTotalCount += data.count;
           itemsListHTML += `<div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px;"><span>${name} x${data.count}</span><span>${data.totalPrice.toLocaleString()}${unitWon}</span></div>`;
+        });
+
+        // 🌟 [소제목 명세서 레이블 최적화 연동단]
+        let ingredientsSectionHTML = '';
+        uniqueProductCodes.forEach((code) => {
+          const item = assetsInfo[code];
+          if (item && item.ingredients) {
+            const labelDesc = currentLang === 'en' ? 'DESCRIPTION' : '상품설명';
+            const labelEffect = currentLang === 'en' ? 'EFFECT' : '사용효과';
+            const labelIngre = currentLang === 'en' ? 'INGREDIENTS' : '전성분';
+            const labelCaution =
+              currentLang === 'en' ? 'CAUTION' : '사용시 주의사항';
+
+            ingredientsSectionHTML += `
+              <div style="margin-top: 12px; border: 1px solid #000; padding: 7px; border-radius: 4px; background-color: #fafafa; font-size: 10.5px;">
+                <div style="font-weight: bold; font-size: 11.5px; margin-bottom: 5px; border-bottom: 1px dashed #000; padding-bottom: 2px;">[ ${item.name} ]</div>
+                <div style="margin-bottom: 4px;"><strong>${labelDesc} :</strong> ${item.desc[currentLang]}</div>
+                <div style="margin-bottom: 4px;"><strong>${labelEffect} :</strong><br>${item.effect[currentLang]}</div>
+                <div style="margin-bottom: 4px; word-break: break-all; line-height: 1.3;"><strong>${labelIngre} :</strong><br>${item.ingredients[currentLang]}</div>
+                <div><strong>${labelCaution} :</strong><br>${item.caution[currentLang]}</div>
+              </div>
+            `;
+          }
         });
 
         const receiptDate =
@@ -752,7 +857,7 @@
               .print-divider { border-top: 1px dashed #000; margin: 8px 0; }
               .receipt-face-wrapper { position: relative; width: 54mm; height: 54mm; margin-top: 6mm; margin-bottom: 6mm; overflow: hidden; filter: grayscale(1) contrast(1.6); }
               .receipt-base-img { width: 100%; height: 100%; display: block; object-fit: cover; }
-              .print-footer { text-align: center; margin-top: 15px; font-size: 10px; }
+              .print-footer { text-align: center; margin-top: 20px; font-size: 10px; font-weight: bold; }
               .cut-space { height: 2mm; width: 100%; }
             </style>
           </head>
@@ -776,6 +881,11 @@
               <span>${textRecTotalPrice}</span>
               <span>${grandTotal.toLocaleString()}${unitWon}</span>
             </div>
+            
+            <div class="print-divider"></div>
+            <div style="font-weight: bold; font-size: 11px; margin-top: 5px; text-align: center;">${currentLang === 'en' ? '[ SPECIFICATION ]' : '[ 성분 표기 명세 ]'}</div>
+            ${ingredientsSectionHTML}
+
             <div class="print-divider"></div>
             <div class="print-footer">${textRecFooter}</div>
             <div class="cut-space"></div>
@@ -837,7 +947,6 @@
         }
       }
 
-      // 🌟 [전면 내장 개조] 외부 파일 버그 차단을 위해 아예 영어 번역을 HTML 내부에서 다이렉트로 실행!
       function loadEnglishScript() {
         console.log(
           'THE FAKE SHOP - English Mode Active [Internal Micro-Engine]',
@@ -848,7 +957,7 @@
         unitWon = ' KRW';
         textModalTotal = 'TOTAL AMOUNT: ';
         textBtnBack = 'BACK';
-        textBtnPayFinal = 'CHECKOUT'; // 👈 꼬리표 텍스트 가변 잠금 해제
+        textBtnPayFinal = 'CHECKOUT';
 
         textRecListTitle = '[CONFIRMED ORDER LIST]';
         textRecTotalQty = 'TOTAL QTY';
@@ -872,7 +981,6 @@
         document.getElementById('text-modal-title').innerText =
           'CONFIRM YOUR ORDER';
 
-        // 🌟 모달 확인창의 최종 단추를 무조건 강제로 'CHECKOUT'으로 주사 처리!
         document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
         document.getElementById('btn-top-back').innerText = textBtnBack;
 
