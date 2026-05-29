@@ -197,7 +197,7 @@
         font-weight: 700;
       }
 
-      /* 결제하기 버튼 크기 슬림 밸런스 */
+      /* 🌟 결제하기 버튼 크기 날씬하고 세련되게 수정 완료 */
       .btn-pay-active {
         background: var(--point-red) !important;
         color: #fff !important;
@@ -503,15 +503,7 @@
       let textRecFooter =
         '안녕하세요~ The Fake Shop 입니다~<br />또 이용해 주세요!';
 
-      const canvas = document.getElementById('faceCanvas');
-      const ctx = canvas.getContext('2d');
-      const barcodeInput = document.getElementById('barcode-input');
-      const globalLangBox = document.getElementById('global-lang-box');
-      const globalBackBox = document.getElementById('global-back-box');
-
-      let scannedParts = [];
-
-      // 🌟 [성분 명세 스펙 업데이트 완료]
+      // 🌟 부품 데이터 세트 내부에 전성분, 사용효과, 주의사항 스펙 완전 이식
       const assetsInfo = {
         2030999: {
           name: '안유진의 눈',
@@ -524,7 +516,7 @@
           },
           effect: {
             ko: '눈의 중심 간격을 부드럽게 정돈하여 시원하고 개방감 있는 인상 연출<br>초롱초롱한 강아지 같은 눈빛으로 자연스럽게 호감도를 끌어올림<br>밝고 당당한 에너지로 주변 분위기를 부드럽게 만드는 효과',
-            en: 'Softly aligns the inner eye distance to create a refreshing and open impression.<br>Naturally boosts likability with sparkling, puppy-like eyes.<br>Softens the surrounding atmosphere with bright, confident energy.',
+            en: 'Softly aligns the inner eye distance to create a refreshing and open impression.<br>Naturally boots likability with sparkling, puppy-like eyes.<br>Softens the surrounding atmosphere with bright, confident energy.',
           },
           ingredients: {
             ko: '타인의 기대치, 미디어 노출 빈도, 호감 유발 물질, 순수함 인식 인자, 또래 비교 지수, 각막 곡률 지수, 공막 노출 면적, 주목도 자극 성분, 자기 검열, 동공 반사율, 잔상 지속 성분, 첫인상 형성 인자, 감정 투영 물질, 시선 집중 유발제, 귀여움 연상 성분, 신뢰도 상승 인자, 호기심 유발 물질, 미확인 매력 물질, 기타 불명 성분',
@@ -773,6 +765,7 @@
         document.getElementById('modal-cart').style.display = 'flex';
       }
 
+      // 🌟 영수증 출력 엔진 단독 구동 모듈
       function actionPrintAndReset() {
         let facePartImagesHTML = '';
         const sortedParts = [...scannedParts].sort((a, b) => {
@@ -810,10 +803,10 @@
           itemsListHTML += `<div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px;"><span>${name} x${data.count}</span><span>${data.totalPrice.toLocaleString()}${unitWon}</span></div>`;
         });
 
-        // 🌟 [소제목 명세서 레이블 최적화 연동단]
+        // 🌟 [성분표 렌더러 - 완벽 보정판 장착] 데이터 유형(String/Number) 관계없이 강제 추출
         let ingredientsSectionHTML = '';
         uniqueProductCodes.forEach((code) => {
-          const item = assetsInfo[code];
+          const item = assetsInfo[code] || assetsInfo[Number(code)];
           if (item && item.ingredients) {
             const labelDesc = currentLang === 'en' ? 'DESCRIPTION' : '상품설명';
             const labelEffect = currentLang === 'en' ? 'EFFECT' : '사용효과';
@@ -947,6 +940,7 @@
         }
       }
 
+      // 🌟 완전 내장된 영문 다국어 패치 마크엔진 구역
       function loadEnglishScript() {
         console.log(
           'THE FAKE SHOP - English Mode Active [Internal Micro-Engine]',
