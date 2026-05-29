@@ -9,6 +9,7 @@
   unitWon = ' KRW';
   textModalTotal = 'TOTAL AMOUNT: ';
   textBtnBack = 'BACK';
+  textBtnPayFinal = 'CHECKOUT'; // 🌟 전역 모달 결제 단추 전용 상태 갱신
 
   textRecListTitle = '[CONFIRMED ORDER LIST]';
   textRecTotalQty = 'TOTAL QTY';
@@ -22,9 +23,7 @@
   assetsInfo[77588517748].name = "Dohyun's Mouth";
   assetsInfo[30920].name = "Bibi's Beauty Mark";
 
-  // 🌟 [추가] 초기 인트로 화면(비디오 상태) 멘트도 영어로 즉시 오버라이트 체인지
   document.getElementById('text-touch-msg').innerText = 'TOUCH TO START';
-
   document.getElementById('text-scan-title').innerText =
     'PLEASE SCAN THE BARCODE';
   document.getElementById('lbl-dash-name').innerText = 'ITEM NAME';
@@ -32,8 +31,9 @@
   document.getElementById('lbl-dash-price').innerText = 'PRICE';
   document.getElementById('btn-open-cart').innerText = 'CHECKOUT';
   document.getElementById('text-modal-title').innerText = 'CONFIRM YOUR ORDER';
-  document.getElementById('btn-final-pay').innerText = 'PLACE ORDER & PRINT';
 
+  // 모달 내부 버튼 엘리먼트 텍스트 직접 주사
+  document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
   document.getElementById('btn-top-back').innerText = textBtnBack;
 
   if (document.getElementById('modal-cart').style.display === 'flex') {
