@@ -356,15 +356,15 @@
         opacity: 0;
         pointer-events: none;
       }
-
-      /* 🌟 [수정] 영수증 영역 스타일 원본 보존하되 키오스크 화면에선 절대 안보이게 숨김 처리 */
-      #print-receipt-zone {
-        display: none;
-      }
     </style>
   </head>
 
   <body>
+    <script>
+      document.addEventListener('contextmenu', (e) => e.preventDefault());
+      document.addEventListener('selectstart', (e) => e.preventDefault());
+    </script>
+
     <div class="back-box" id="global-back-box">
       <button
         class="btn-back-style"
@@ -450,18 +450,12 @@
     </div>
 
     <script>
-      // 🌟 전시장 우클릭 완벽 차단 보안 센서 활성화
-      document.addEventListener('contextmenu', (event) =>
-        event.preventDefault(),
-      );
-
       let currentLang = 'ko';
       let unitQty = '개';
       let unitWon = '원';
       let textModalTotal = '총 결제 금액: ';
       let textBtnBack = '이전으로';
 
-      // 영수증용 한글 고정 텍스트 바인딩 세트
       let textRecListTitle = '[구매 확정 목록]';
       let textRecTotalQty = '총 수량';
       let textRecTotalPrice = '총 결제 금액';
@@ -511,6 +505,11 @@
 
       const baseImg = new Image();
       baseImg.src = 'assets/base_face.png';
+
+      // 🌟 [교정] 베이스 이미지가 다운로드 완료되면 캔버스를 즉시 그리도록 온로드 이벤트 연동! (첫 실행 시 검은 화면 문제 해결)
+      baseImg.onload = function () {
+        draw();
+      };
 
       const loadedImages = {};
 
@@ -647,9 +646,8 @@
         document.getElementById('modal-cart').style.display = 'flex';
       }
 
-      // 🌟 [전면 개편] 1초의 번쩍임 현상을 원천 차단한 완벽 유령 창(iFrame) 다이렉트 자동 인쇄 엔진
+      // 🌟 [인쇄 엔진 대개혁] 1초의 번쩍임을 원천 차단하고 완전 자동 백그라운드 인쇄를 처리하는 핵심 구역
       function actionPrintAndReset() {
-        // 1. 부품 레이어 정렬 조립
         let facePartImagesHTML = '';
         const sortedParts = [...scannedParts].sort((a, b) => {
           if (assetsInfo[a.code].type === 'mole') return 1;
@@ -661,10 +659,9 @@
           const scaleRatio = 48 / 1280;
           const moveX = part.randomX * scaleRatio;
           const moveY = part.randomY * scaleRatio;
-          facePartImagesHTML += `<img class="receipt-part-img" src="${assetsInfo[part.code].src}" style="transform: translate(${moveX}mm, ${moveY}mm);" />`;
+          facePartImagesHTML += `<img style="position: absolute; width: 48mm; height: 48mm; top: 0; left: 0; object-fit: cover; transform-origin: top left; mix-blend-mode: multiply; filter: grayscale(1) brightness(0) contrast(999); image-rendering: pixelated; transform: translate(${moveX}mm, ${moveY}mm);" src="${assetsInfo[part.code].src}" />`;
         });
 
-        // 2. 장바구니 리스트 계산
         let itemsListHTML = '';
         const summary = {};
         let grandTotal = 0;
@@ -681,20 +678,17 @@
         let finalTotalCount = 0;
         Object.entries(summary).forEach(([name, data]) => {
           finalTotalCount += data.count;
-          itemsListHTML += `<div class="print-row"><span>${name} x${data.count}</span><span>${data.totalPrice.toLocaleString()}${unitWon}</span></div>`;
+          itemsListHTML += `<div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px;"><span>${name} x${data.count}</span><span>${data.totalPrice.toLocaleString()}${unitWon}</span></div>`;
         });
 
-        // 3. 눈에 보이지 않는 0x0 사이즈 유령 iFrame 생성 및 주입
+        // 💡 [치트키] 화면에 안 보이는 유령 iFrame(가상 프린트 윈도우) 빌드업
         const iframe = document.createElement('iframe');
         iframe.style.position = 'fixed';
-        iframe.style.right = '0';
-        iframe.style.bottom = '0';
         iframe.style.width = '0';
         iframe.style.height = '0';
         iframe.style.border = '0';
         document.body.appendChild(iframe);
 
-        // 4. 생성한 유령창 내부에만 인쇄용 CSS와 데이터를 주사
         const doc = iframe.contentWindow.document;
         doc.open();
         doc.write(`
@@ -707,8 +701,6 @@
               .print-divider { border-top: 1px dashed #000; margin: 8px 0; }
               .receipt-face-wrapper { position: relative; width: 54mm; height: 54mm; margin-top: 6mm; margin-bottom: 6mm; overflow: hidden; filter: grayscale(1) contrast(1.6); }
               .receipt-base-img { width: 100%; height: 100%; display: block; object-fit: cover; }
-              .receipt-part-img { position: absolute; width: 48mm; height: 48mm; top: 0; left: 0; object-fit: cover; transform-origin: top left; mix-blend-mode: multiply; filter: grayscale(1) brightness(0) contrast(999); image-rendering: pixelated; }
-              .print-row { display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; }
               .print-footer { text-align: center; margin-top: 15px; font-size: 10px; }
               .cut-space { height: 20mm; width: 100%; }
             </style>
@@ -725,11 +717,11 @@
             <div style="font-weight: bold; margin-bottom: 5px">${textRecListTitle}</div>
             <div>${itemsListHTML}</div>
             <div class="print-divider"></div>
-            <div class="print-row" style="font-weight: bold; font-size: 12px;">
+            <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 12px;">
               <span>${textRecTotalQty}</span>
               <span>${finalTotalCount}${unitQty}</span>
             </div>
-            <div class="print-row" style="font-weight: bold; font-size: 13px; margin-top: 2px;">
+            <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 13px; margin-top: 2px;">
               <span>${textRecTotalPrice}</span>
               <span>${grandTotal.toLocaleString()}${unitWon}</span>
             </div>
@@ -741,17 +733,16 @@
         `);
         doc.close();
 
-        // 5. 유령창 렌더링 완료 시 메인 화면 방해 없이 조용히 인쇄 사격
+        // 메인 화면 가림막 처리 후 인쇄 슛
+        globalLangBox.style.display = 'none';
+        globalBackBox.style.display = 'none';
+
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+
         setTimeout(() => {
-          globalLangBox.style.display = 'none';
-          globalBackBox.style.display = 'none';
-
-          iframe.contentWindow.focus();
-          iframe.contentWindow.print();
-
-          // 6. 인쇄 스케줄 인도 완료 후 유령 삭제 및 자동 완전 초기화(첫 화면 복귀)
           document.body.removeChild(iframe);
-          location.reload();
+          location.reload(); // 첫 메인화면 리셋 자동 복귀
         }, 300);
       }
 

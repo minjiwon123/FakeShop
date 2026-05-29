@@ -1,6 +1,8 @@
 // locale-en.js
 (function () {
-  console.log('THE FAKE SHOP - English Patch Active [Receipt Translation Fix]');
+  console.log(
+    'THE FAKE SHOP - English Patch Active [No-Flicker Silence Printing Mode]',
+  );
 
   // 1. 전역 접미사 및 단위 영문 갱신
   currentLang = 'en';
@@ -9,14 +11,14 @@
   textModalTotal = 'TOTAL AMOUNT: ';
   textBtnBack = 'BACK';
 
-  // 영수증용 영문 고정 텍스트 세트 완전 교체
+  // 🌟 영수증 전용 가변 인쇄 레이블 영어로 동시 치환
   textRecListTitle = '[CONFIRMED ORDER LIST]';
   textRecTotalQty = 'TOTAL QTY';
   textRecTotalPrice = 'TOTAL AMOUNT';
   textRecFooter =
     'Thank you for visiting The Fake Shop~<br />Please come again!';
 
-  // 2. 🌟 [핵심 수정] 영수증 인쇄 엔진이 낚아챌 수 있도록 assetsInfo의 기본 'name' 필드 자체를 영어로 전면 교체
+  // 2. 🌟 [영수증 출력 버그 수정] 에셋 이름 명세 정보 자체를 영문으로 전면 리네이밍 치환
   assetsInfo[2030999].name = "Yujin's Eye";
   assetsInfo[1392010].name = "Prof. Oh's Eye";
   assetsInfo[5203344587].name = "Sekyung's Nose";
@@ -37,7 +39,7 @@
   // 좌측 상단 통합 컨트롤 버튼 영문 체인지
   document.getElementById('btn-top-back').innerText = textBtnBack;
 
-  // 4. 현재 화면 상태에 맞춰 장바구니 새로고침
+  // 4. 현재 사용자가 열어둔 화면 상태에 맞춰 알맹이 레이블 리렌더링 동기화
   if (document.getElementById('modal-cart').style.display === 'flex') {
     const list = document.getElementById('cart-list');
     list.innerHTML = '';
@@ -46,7 +48,6 @@
     let grandTotal = 0;
 
     scannedParts.forEach((p) => {
-      // 🌟 실시간으로 변경된 assetsInfo 영문 이름을 추적합니다.
       const currentName = assetsInfo[p.code].name;
       if (!summary[currentName]) {
         summary[currentName] = { count: 0, totalPrice: 0 };
