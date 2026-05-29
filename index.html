@@ -10,11 +10,10 @@
       @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Jua&family=Montserrat:wght@700;900&display=swap');
 
       :root {
-        /* 🎨 새 포스터 기반 팝&키치 파스텔 컬러 바인딩 */
-        --main-yellow: #fbf9e6; /* 부드러운 밀크 아이보리 배경 */
-        --point-red: #f15a31; /* 타이틀 외곽선의 다홍빛 오렌지 레드 */
-        --stroke-orange: #d74b29; /* 딥 오렌지 브라운 */
-        --point-blue: #7cb8f7; /* 포스터 타이틀 내부의 상큼한 스카이 블루 */
+        --main-yellow: #fbf9e6;
+        --point-red: #f15a31;
+        --stroke-orange: #d74b29;
+        --point-blue: #7cb8f7;
         --text-dark: #222222;
       }
 
@@ -56,7 +55,6 @@
         justify-content: center;
       }
 
-      /* 대기 화면 텍스트 애니메이션 */
       .touch-msg {
         font-size: 3.2vh;
         font-weight: 400;
@@ -88,14 +86,12 @@
         z-index: 1100;
       }
 
-      /* 버튼 간섭 차단 패딩 */
       .scan-header {
         width: 100%;
         padding: 8vh 0 1vh 0;
         text-align: center;
       }
 
-      /* 타이틀 글자 겉외곽선 매커니즘 */
       .scan-title {
         font-size: 4vh;
         color: var(--main-yellow);
@@ -151,15 +147,20 @@
         border-right: 1px solid rgba(255, 255, 255, 0.4);
         padding-top: 1vh;
       }
+      .dash-section:nth-child(1) {
+        flex: 1.4;
+      }
       .dash-section:nth-child(2) {
-        flex: 0.6;
+        flex: 0.7;
       }
       .dash-section:nth-child(3) {
-        flex: 1.2;
+        flex: 1.4;
       }
       .dash-section:last-child {
         border-right: none;
         flex: 1.3;
+        justify-content: center;
+        padding-top: 0;
       }
 
       .dash-label {
@@ -200,9 +201,9 @@
         background: var(--point-red);
         color: #fff;
         border: 3px solid #fff;
-        padding: 2.2vh 4vh;
+        padding: 2.2vh 3.5vh;
         border-radius: 2vh;
-        font-size: 2.6vh;
+        font-size: 2.5vh;
         cursor: pointer;
         font-family: 'Jua', sans-serif;
         box-shadow: 0 4px 0px rgba(0, 0, 0, 0.1);
@@ -273,16 +274,42 @@
         font-weight: 900;
       }
 
-      /* 🌐 전역 다국어 제어 박스 */
+      /* 🌐 좌측 상단 이전으로 배치 레이어 상자 */
+      .back-box {
+        display: none;
+        position: absolute;
+        top: 2vh;
+        left: 4vw;
+        z-index: 1300;
+      }
+
+      /* 🌟 [수정] 한글 주아체('Jua')를 우선순위 1등으로 적용하여 동글동글 통통하게 매핑 */
+      .btn-back-style {
+        background: white;
+        border: 3px solid var(--point-blue);
+        border-radius: 999px;
+        padding: 0.8vh 3.2vh;
+        font-size: 2.2vh;
+        font-weight: 700;
+        cursor: pointer;
+        color: var(--stroke-orange);
+        box-shadow: 0 4px 0px rgba(0, 0, 0, 0.05);
+        letter-spacing: -0.05vw;
+        transition: 0.1s;
+        font-family:
+          'Jua', 'Fredoka', sans-serif !important; /* 👈 한글/영어 폰트 셋트 완벽 매핑 */
+      }
+
+      /* 🌐 우측 상단 언어 선택 제어 박스 */
       .language-box {
         display: none;
         position: absolute;
         top: 2vh;
         right: 4vw;
         z-index: 1300;
-        font-family: 'Fredoka', 'Jua', sans-serif;
       }
 
+      /* 🌟 [수정] 언어 버튼도 일관성을 위해 주아체와 Fredoka를 혼용 매핑 */
       .language-btn {
         background: white;
         border: 3px solid var(--point-blue);
@@ -295,6 +322,8 @@
         box-shadow: 0 4px 0px rgba(0, 0, 0, 0.05);
         letter-spacing: 0.05vw;
         transition: 0.1s;
+        font-family:
+          'Jua', 'Fredoka', sans-serif !important; /* 👈 서체 엔진 완전 교환 */
       }
 
       .language-menu {
@@ -317,14 +346,13 @@
         background: white;
         transition: 0.2s;
         text-align: center;
-        font-family: 'Fredoka', 'Jua', sans-serif;
+        font-family: 'Jua', 'Fredoka', sans-serif !important;
       }
 
       .language-item:hover {
         background: var(--point-blue);
         color: white;
       }
-
       .language-box.open .language-menu {
         display: block;
       }
@@ -334,34 +362,29 @@
         opacity: 0;
         pointer-events: none;
       }
-
       #print-receipt-zone {
         display: none;
       }
 
-      /* ===========================
-         PRINT 
-      =========================== */
+      /* PRINT STYLE */
       @media print {
         @page {
           size: 58mm auto;
           margin: 0;
         }
-
         body {
           background: white !important;
           font-family: monospace !important;
         }
-
         #kiosk-frame,
         #screen-main,
         #modal-cart,
         #video-background,
         #screen-start,
-        .language-box {
+        .language-box,
+        .back-box {
           display: none !important;
         }
-
         #print-receipt-zone {
           display: block !important;
           width: 46mm !important;
@@ -376,19 +399,16 @@
           position: relative !important;
           left: -1mm !important;
         }
-
         .print-title {
           text-align: center;
           font-size: 16px;
           font-weight: bold;
           margin: 10px 0 2px 0;
         }
-
         .print-divider {
           border-top: 1px dashed #000;
           margin: 8px 0;
         }
-
         .receipt-face-wrapper {
           position: relative !important;
           width: 54mm !important;
@@ -400,14 +420,12 @@
           background: #fff !important;
           filter: grayscale(1) contrast(1.6) !important;
         }
-
         .receipt-base-img {
           width: 100% !important;
           height: 100% !important;
           display: block !important;
           object-fit: cover !important;
         }
-
         .receipt-part-img {
           position: absolute !important;
           width: 48mm !important;
@@ -420,20 +438,17 @@
           filter: grayscale(1) brightness(0) contrast(999) !important;
           image-rendering: pixelated !important;
         }
-
         .print-row {
           display: flex;
           justify-content: space-between;
           margin: 4px 0;
           font-size: 11px;
         }
-
         .print-footer {
           text-align: center;
           margin-top: 15px;
           font-size: 10px;
         }
-
         .cut-space {
           height: 20mm;
           width: 100%;
@@ -443,6 +458,16 @@
   </head>
 
   <body>
+    <div class="back-box" id="global-back-box">
+      <button
+        class="btn-back-style"
+        id="btn-top-back"
+        onclick="handleBackAction()"
+      >
+        이전으로
+      </button>
+    </div>
+
     <div class="language-box" id="global-lang-box">
       <button class="language-btn">LANGUAGE</button>
       <div class="language-menu">
@@ -502,10 +527,10 @@
       <div id="modal-cart" class="modal">
         <h1 class="modal-title" id="text-modal-title">주문 리스트 확인</h1>
         <div id="cart-list"></div>
-        <!-- 💰 자바스크립트 변수 결합 구역 -->
         <div class="cart-total-bar" id="cart-total-price">
           총 결제 금액: 0원
         </div>
+
         <button
           class="btn-pay-active"
           id="btn-final-pay"
@@ -518,7 +543,6 @@
       <input type="text" id="barcode-input" />
     </div>
 
-    <!-- PRINT ZONE -->
     <div id="print-receipt-zone">
       <div class="print-title">THE FAKE SHOP</div>
       <div style="text-align: center; font-size: 9px" id="print-date"></div>
@@ -559,16 +583,17 @@
     </div>
 
     <script>
-      // 🌐 번역 모드 제어 전역 상태 변수들
       let currentLang = 'ko';
       let unitQty = '개';
       let unitWon = '원';
-      let textModalTotal = '총 결제 금액: '; // 🌟 장바구니 합계 문장 국적 스케일
+      let textModalTotal = '총 결제 금액: ';
+      let textBtnBack = '이전으로';
 
       const canvas = document.getElementById('faceCanvas');
       const ctx = canvas.getContext('2d');
       const barcodeInput = document.getElementById('barcode-input');
       const globalLangBox = document.getElementById('global-lang-box');
+      const globalBackBox = document.getElementById('global-back-box');
 
       let scannedParts = [];
 
@@ -619,18 +644,31 @@
 
       function startKiosk() {
         document.getElementById('screen-start').style.display = 'none';
-        const main = document.getElementById('screen-main');
-        main.style.display = 'flex';
-
+        document.getElementById('screen-main').style.display = 'flex';
         globalLangBox.style.display = 'block';
-
+        globalBackBox.style.display = 'block';
         barcodeInput.focus();
         draw();
       }
 
+      function handleBackAction() {
+        if (document.getElementById('modal-cart').style.display === 'flex') {
+          document.getElementById('modal-cart').style.display = 'none';
+          document.getElementById('screen-main').style.display = 'flex';
+          barcodeInput.focus();
+        } else {
+          scannedParts = [];
+          updateDashboards();
+          draw();
+          document.getElementById('screen-main').style.display = 'none';
+          globalLangBox.style.display = 'none';
+          globalBackBox.style.display = 'none';
+          document.getElementById('screen-start').style.display = 'flex';
+        }
+      }
+
       function draw() {
         ctx.clearRect(0, 0, 1280, 1280);
-
         if (baseImg.complete) {
           const scale = Math.max(1280 / baseImg.width, 1280 / baseImg.height);
           const x = (1280 - baseImg.width * scale) / 2;
@@ -643,13 +681,11 @@
             baseImg.height * scale,
           );
         }
-
         const sortedParts = [...scannedParts].sort((a, b) => {
           if (assetsInfo[a.code].type === 'mole') return 1;
           if (assetsInfo[b.code].type === 'mole') return -1;
           return 0;
         });
-
         sortedParts.forEach((part) => {
           const img = loadedImages[part.code];
           if (img && img.complete) {
@@ -661,9 +697,7 @@
       barcodeInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           const val = e.target.value.replace(/\s/g, '').trim();
-          console.log('스캔값:', val);
           const info = assetsInfo[val];
-
           if (info) {
             scannedParts.push({
               code: val,
@@ -674,9 +708,6 @@
             });
             updateDashboards();
             draw();
-            console.log('추가 완료');
-          } else {
-            console.log('없는 바코드');
           }
           e.target.value = '';
         }
@@ -686,7 +717,6 @@
         const nameDiv = document.getElementById('dash-name-list');
         const qtyDiv = document.getElementById('dash-qty-list');
         const priceDiv = document.getElementById('dash-price-list');
-
         const summary = {};
 
         scannedParts.forEach((p) => {
@@ -701,7 +731,6 @@
         nameDiv.innerHTML = '';
         qtyDiv.innerHTML = '';
         priceDiv.innerHTML = '';
-
         Object.entries(summary).forEach(([name, data]) => {
           nameDiv.innerHTML += `<div>${name}</div>`;
           qtyDiv.innerHTML += `<div class="qty-row">${data.count}${unitQty}</div>`;
@@ -713,7 +742,6 @@
         document.getElementById('screen-main').style.display = 'none';
         const list = document.getElementById('cart-list');
         list.innerHTML = '';
-
         const summary = {};
         let grandTotal = 0;
 
@@ -735,7 +763,6 @@
             </div>
           `;
         });
-
         document.getElementById('cart-total-price').innerText =
           `${textModalTotal}${grandTotal.toLocaleString()}${unitWon}`;
         document.getElementById('modal-cart').style.display = 'flex';
@@ -756,7 +783,6 @@
           const imgTag = document.createElement('img');
           imgTag.className = 'receipt-part-img';
           imgTag.src = assetsInfo[part.code].src;
-
           const scaleRatio = 48 / 1280;
           const moveX = part.randomX * scaleRatio;
           const moveY = part.randomY * scaleRatio;
@@ -771,7 +797,6 @@
 
         const summary = {};
         let grandTotal = 0;
-
         scannedParts.forEach((p) => {
           const currentName = assetsInfo[p.code].name;
           if (!summary[currentName]) {
@@ -785,25 +810,19 @@
         let finalTotalCount = 0;
         Object.entries(summary).forEach(([name, data]) => {
           finalTotalCount += data.count;
-          printItemsBody.innerHTML += `
-            <div class="print-row">
-                <span>${name} x${data.count}</span>
-                <span>${data.totalPrice.toLocaleString()}${unitWon}</span>
-            </div>
-          `;
+          printItemsBody.innerHTML += `<div class="print-row"><span>${name} x${data.count}</span><span>${data.totalPrice.toLocaleString()}${unitWon}</span></div>`;
         });
 
         document.getElementById('print-total-count').innerText =
           finalTotalCount + unitQty;
         document.getElementById('print-total-price-zone').innerText =
           grandTotal.toLocaleString() + unitWon;
-
         globalLangBox.style.display = 'none';
+        globalBackBox.style.display = 'none';
 
         setTimeout(() => {
           window.print();
         }, 500);
-
         window.onafterprint = () => {
           location.reload();
         };
@@ -815,24 +834,20 @@
         }
       });
 
-      // 🌟 [교정 완료] 화면 전환 없이 그 자리에서 텍스트와 단위를 다시 한국어로 돌려놓는 함수
       function changeToKorean() {
         console.log('THE FAKE SHOP - Korean Mode Restored!');
-
-        // 1. 전역 접미사 및 금액 자막단위 한글로 리셋
         currentLang = 'ko';
         unitQty = '개';
         unitWon = '원';
         textModalTotal = '총 결제 금액: ';
+        textBtnBack = '이전으로';
 
-        // 2. 부품 에셋 정보망의 이름을 다시 순수 한글 명칭으로 복구
         assetsInfo[2030999].name = '안유진의 눈';
         assetsInfo[1392010].name = '오준현 교수님의 눈';
         assetsInfo[5203344587].name = '신세경의 코';
         assetsInfo[77588517748].name = '이도현의 입';
         assetsInfo[30920].name = '비비의 점';
 
-        // 3. 고정 UI 엘리먼트 라벨 한글 복구
         document.getElementById('text-touch-msg').innerText =
           '화면을 터치해 주세요.';
         document.getElementById('text-scan-title').innerText =
@@ -845,7 +860,8 @@
           '주문 리스트 확인';
         document.getElementById('btn-final-pay').innerText = '최종 결제 진행';
 
-        // 4. 숨겨진 프린트 영수증 영역 한글 복구
+        document.getElementById('btn-top-back').innerText = textBtnBack;
+
         document.getElementById('text-receipt-list-title').innerText =
           '[구매 확정 목록]';
         document.getElementById('text-receipt-total-qty').innerText = '총 수량';
@@ -854,62 +870,27 @@
         document.getElementById('text-receipt-footer').innerHTML =
           '귀하의 신원 데이터는 수집 완료되었습니다.<br />이용해 주셔서 감사합니다.';
 
-        // 5. 현재 사용자가 켜놓은 화면 상태에 따라 데이터 텍스트만 실시간 한글 오버라이트
         if (document.getElementById('modal-cart').style.display === 'flex') {
-          const list = document.getElementById('cart-list');
-          list.innerHTML = '';
-
-          const summary = {};
-          let grandTotal = 0;
-
-          scannedParts.forEach((p) => {
-            const currentName = assetsInfo[p.code].name;
-            if (!summary[currentName]) {
-              summary[currentName] = { count: 0, totalPrice: 0 };
-            }
-            summary[currentName].count += 1;
-            summary[currentName].totalPrice += p.price;
-            grandTotal += p.price;
-          });
-
-          Object.entries(summary).forEach(([name, data]) => {
-            list.innerHTML += `
-              <div style="display:flex; justify-content:space-between; margin-bottom:1.5vh;">
-                  <span>${name} (${data.count}${unitQty})</span>
-                  <span style="color:var(--stroke-orange); font-weight:900;">${data.totalPrice.toLocaleString()}${unitWon}</span>
-              </div>
-            `;
-          });
-          document.getElementById('cart-total-price').innerText =
-            `${textModalTotal}${grandTotal.toLocaleString()}${unitWon}`;
+          openCart();
         } else {
           updateDashboards();
         }
       }
 
-      // 🌟 [교정 완료] 영어를 다시 누를 때마다 기존 스크립트를 파괴하고 새 주입 코드를 강제 리로드하는 함수
       function loadEnglishScript() {
-        // 이미 주입되어 있던 올드 스크립트 엘리먼트가 있다면 body에서 깨끗하게 지워버립니다.
         const oldScript = document.getElementById('en-script');
-        if (oldScript) {
-          oldScript.remove();
-        }
-
-        // 새 브라우저 캐시 문제를 방지하기 위해 타임스탬프 값을 붙여 완전히 새로운 스크립트로 인식시킵니다.
+        if (oldScript) oldScript.remove();
         const script = document.createElement('script');
         script.id = 'en-script';
         script.src = 'locale-en.js?v=' + Date.now();
-
         document.body.appendChild(script);
       }
 
-      // 언어 드롭다운 토글 제어 루틴
       const languageBtn = document.querySelector('.language-btn');
       languageBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         globalLangBox.classList.toggle('open');
       });
-
       document.addEventListener('click', () => {
         globalLangBox.classList.remove('open');
       });
