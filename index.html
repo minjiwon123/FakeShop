@@ -574,11 +574,24 @@
 
       barcodeInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
-          const val = e.target.value.replace(/\s/g, '').trim();
-          const info = assetsInfo[val];
+          // 1. 입력된 값의 모든 공백을 없애고 텍스트(문자열) 형태로 정리
+          const valStr = e.target.value.replace(/\s/g, '').trim();
+
+          // 2. 숫자로 등록된 바코드도 찾을 수 있도록 숫자 형태로도 변환
+          const valNum = Number(valStr);
+
+          // 3. 문자열 key(['2030999'])로 찾거나, 숫자 key(2030999)로 찾아서 완벽 매칭 보장
+          const info = assetsInfo[valStr] || assetsInfo[valNum];
+
           if (info) {
+            // 진짜 매칭된 데이터의 정확한 원래 key값을 객체에서 추적하여 code에 주입
+            const exactCode =
+              Object.keys(assetsInfo).find(
+                (key) => key == valStr || Number(key) == valNum,
+              ) || valStr;
+
             scannedParts.push({
-              code: val,
+              code: exactCode,
               name: info.name,
               price: info.price,
               randomX: (Math.random() - 0.5) * 180,
@@ -586,6 +599,8 @@
             });
             updateDashboards();
             draw();
+          } else {
+            console.log('미등록 바코드 감지됨:', valStr); // 테스팅용 로그
           }
           e.target.value = '';
         }
