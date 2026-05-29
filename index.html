@@ -854,7 +854,20 @@
           <head>
             <style>
               @page { size: 58mm auto; margin: 0; }
-              body { color: #000; background: #fff; font-family: monospace; font-size: 11px; line-height: 1.4; padding: 10mm 3mm; box-sizing: border-box; }
+              /* 🌟 키오스크 본문 body와 겹치지 않게 인쇄 전용 body 스타일 완전 고정 */
+              body { color: #000; background: #fff; font-family: monospace; font-size: 11px; line-height: 1.4; padding: 10mm 0mm; box-sizing: border-box; }
+              
+              /* 🌟 [치트키 박스] 영수증 내용물만 좌우로 밀고 당기는 전용 조절 나사 */
+              .receipt-content-wrapper {
+                width: 100%;
+                box-sizing: border-box;
+                
+                /* 👇 [여기 마진 값을 고치시면 됩니다!] */
+                /* 현재 구조: 위아래여백 0 / 오른쪽여백 3mm / 아래여백 0 / 왼쪽여백 3mm */
+                /* 만약 영수증이 오른쪽으로 치우쳐서 왼쪽으로 당기고 싶다면, 마지막 값(왼쪽 여백)을 1mm나 0mm로 줄여보세요! */
+                padding: 0mm 3mm 0mm 0mm; 
+              }
+
               .print-title { text-align: center; font-size: 16px; font-weight: bold; margin: 10px 0 2px 0; }
               .print-divider { border-top: 1px dashed #000; margin: 8px 0; }
               .receipt-face-wrapper { position: relative; width: 54mm; height: 54mm; margin-top: 6mm; margin-bottom: 6mm; overflow: hidden; filter: grayscale(1) contrast(1.6); }
@@ -864,33 +877,36 @@
             </style>
           </head>
           <body>
-            <div class="print-title">THE FAKE SHOP</div>
-            <div style="text-align: center; font-size: 9px">${receiptDate}</div>
-            <div class="print-divider"></div>
-            <div class="receipt-face-wrapper">
-              <img class="receipt-base-img" src="assets/base_face.png" />
-              ${facePartImagesHTML}
-            </div>
-            <div class="print-divider"></div>
-            <div style="font-weight: bold; margin-bottom: 5px">${textRecListTitle}</div>
-            <div>${itemsListHTML}</div>
-            <div class="print-divider"></div>
-            <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 12px;">
-              <span>${textRecTotalQty}</span>
-              <span>${finalTotalCount}${unitQty}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 13px; margin-top: 2px;">
-              <span>${textRecTotalPrice}</span>
-              <span>${grandTotal.toLocaleString()}${unitWon}</span>
-            </div>
-            
-            <div class="print-divider"></div>
-            <div style="font-weight: bold; font-size: 11px; margin-top: 5px; text-align: center;">${currentLang === 'en' ? '[ SPECIFICATION ]' : '[ 성분 표기 명세 ]'}</div>
-            ${ingredientsSectionHTML}
+            <!-- 🌟 인쇄 전용 박스로 알맹이 전체를 안전하게 감싸기 -->
+            <div class="receipt-content-wrapper">
+              <div class="print-title">THE FAKE SHOP</div>
+              <div style="text-align: center; font-size: 9px">${receiptDate}</div>
+              <div class="print-divider"></div>
+              <div class="receipt-face-wrapper">
+                <img class="receipt-base-img" src="assets/base_face.png" />
+                ${facePartImagesHTML}
+              </div>
+              <div class="print-divider"></div>
+              <div style="font-weight: bold; margin-bottom: 5px">${textRecListTitle}</div>
+              <div>${itemsListHTML}</div>
+              <div class="print-divider"></div>
+              <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 12px;">
+                <span>${textRecTotalQty}</span>
+                <span>${finalTotalCount}${unitQty}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 13px; margin-top: 2px;">
+                <span>${textRecTotalPrice}</span>
+                <span>${grandTotal.toLocaleString()}${unitWon}</span>
+              </div>
+              
+              <div class="print-divider"></div>
+              <div style="font-weight: bold; font-size: 11px; margin-top: 5px; text-align: center;">${currentLang === 'en' ? '[ SPECIFICATION ]' : '[ 성분 표기 명세 ]'}</div>
+              ${ingredientsSectionHTML}
 
-            <div class="print-divider"></div>
-            <div class="print-footer">${textRecFooter}</div>
-            <div class="cut-space"></div>
+              <div class="print-divider"></div>
+              <div class="print-footer">${textRecFooter}</div>
+              <div class="cut-space"></div>
+            </div>
           </body>
           </html>
         `);
