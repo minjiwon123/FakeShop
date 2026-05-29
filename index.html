@@ -197,16 +197,17 @@
         font-weight: 700;
       }
 
+      /* 🌟 [수정] 결제하기 버튼 크기 날씬하고 콤팩트하게 다듬기 */
       .btn-pay-active {
         background: var(--point-red) !important;
         color: #fff !important;
         border: 3px solid #fff !important;
-        padding: 2.2vh 3.5vh !important;
+        padding: 1.5vh 3vh !important; /* 👈 세로 padding 2.2vh ➡️ 1.5vh로 줄여서 날씬하게 조절 */
         border-radius: 2vh !important;
-        font-size: 2.5vh !important;
+        font-size: 2.3vh !important; /* 👈 글자 크기 살짝만 줄여서 비율 밸런싱 */
         cursor: pointer;
         font-family: 'Jua', sans-serif !important;
-        box-shadow: 0 6px 0px var(--stroke-orange) !important;
+        box-shadow: 0 5px 0px var(--stroke-orange) !important;
         transition:
           transform 0.05s ease-out,
           box-shadow 0.05s ease-out,
@@ -218,7 +219,9 @@
       .btn-pay-active.js-touched {
         background-color: var(--stroke-orange) !important;
         box-shadow: 0 2px 0px rgba(0, 0, 0, 0.2) !important;
-        transform: translateY(4px) !important;
+        transform: translateY(
+          3px
+        ) !important; /* 압축 비율에 맞춰 터치 다운 높이 조절 */
       }
 
       .modal {
@@ -336,7 +339,7 @@
         border: 3px solid var(--point-blue) !important;
         border-radius: 999px !important;
         padding: 0.8vh 2.5vh !important;
-        font-size: 2.2vh !important;
+        font-size: 2.2vh;
         font-weight: 700 !important;
         cursor: pointer;
         color: var(--stroke-orange) !important;
@@ -494,7 +497,7 @@
       let unitWon = '원';
       let textModalTotal = '총 결제 금액: ';
       let textBtnBack = '이전으로';
-      let textBtnPayFinal = '결제하기'; // 🌟 전역 모달 최종 버튼 상태 국적 변수화 완료
+      let textBtnPayFinal = '결제하기';
 
       let textRecListTitle = '[구매 확정 목록]';
       let textRecTotalQty = '총 수량';
@@ -687,7 +690,6 @@
         document.getElementById('cart-total-price').innerText =
           `${textModalTotal}${grandTotal.toLocaleString()}${unitWon}`;
 
-        // 🌟 [수정] 모달창 열릴 때 실시간 언어 상태값에 맞춰서 글자를 주입하도록 보정
         document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
         document.getElementById('modal-cart').style.display = 'flex';
       }
@@ -801,7 +803,7 @@
         unitWon = '원';
         textModalTotal = '총 결제 금액: ';
         textBtnBack = '이전으로';
-        textBtnPayFinal = '결제하기'; // 변수 복구
+        textBtnPayFinal = '결제하기';
 
         textRecListTitle = '[구매 확정 목록]';
         textRecTotalQty = '총 수량';
@@ -825,7 +827,7 @@
         document.getElementById('btn-open-cart').innerText = '결제하기';
         document.getElementById('text-modal-title').innerText =
           '주문 리스트 확인';
-        document.getElementById('btn-final-pay').innerText = textBtnPayFinal; // 변수 대입식으로 변경 완료
+        document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
         document.getElementById('btn-top-back').innerText = textBtnBack;
 
         if (document.getElementById('modal-cart').style.display === 'flex') {
@@ -835,13 +837,50 @@
         }
       }
 
+      // 🌟 [전면 내장 개조] 외부 파일 버그 차단을 위해 아예 영어 번역을 HTML 내부에서 다이렉트로 실행!
       function loadEnglishScript() {
-        const oldScript = document.getElementById('en-script');
-        if (oldScript) oldScript.remove();
-        const script = document.createElement('script');
-        script.id = 'en-script';
-        script.src = 'locale-en.js?v=' + Date.now();
-        document.body.appendChild(script);
+        console.log(
+          'THE FAKE SHOP - English Mode Active [Internal Micro-Engine]',
+        );
+
+        currentLang = 'en';
+        unitQty = 'ea';
+        unitWon = ' KRW';
+        textModalTotal = 'TOTAL AMOUNT: ';
+        textBtnBack = 'BACK';
+        textBtnPayFinal = 'CHECKOUT'; // 👈 꼬리표 텍스트 가변 잠금 해제
+
+        textRecListTitle = '[CONFIRMED ORDER LIST]';
+        textRecTotalQty = 'TOTAL QTY';
+        textRecTotalPrice = 'TOTAL AMOUNT';
+        textRecFooter =
+          'Thank you for visiting The Fake Shop~<br />Please come again!';
+
+        assetsInfo[2030999].name = "Yujin's Eye";
+        assetsInfo[1392010].name = "Prof. Oh's Eye";
+        assetsInfo[5203344587].name = "Sekyung's Nose";
+        assetsInfo[77588517748].name = "Dohyun's Mouth";
+        assetsInfo[30920].name = "Bibi's Beauty Mark";
+
+        document.getElementById('text-touch-msg').innerText = 'TOUCH TO START';
+        document.getElementById('text-scan-title').innerText =
+          'PLEASE SCAN THE BARCODE';
+        document.getElementById('lbl-dash-name').innerText = 'ITEM NAME';
+        document.getElementById('lbl-dash-qty').innerText = 'QTY';
+        document.getElementById('lbl-dash-price').innerText = 'PRICE';
+        document.getElementById('btn-open-cart').innerText = 'CHECKOUT';
+        document.getElementById('text-modal-title').innerText =
+          'CONFIRM YOUR ORDER';
+
+        // 🌟 모달 확인창의 최종 단추를 무조건 강제로 'CHECKOUT'으로 주사 처리!
+        document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
+        document.getElementById('btn-top-back').innerText = textBtnBack;
+
+        if (document.getElementById('modal-cart').style.display === 'flex') {
+          openCart();
+        } else {
+          updateDashboards();
+        }
       }
 
       const languageBtn = document.querySelector('.language-btn');
