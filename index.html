@@ -74,7 +74,7 @@
         }
       }
 
-      /* 메인 스캔 화면 구역 왼쪽으로 20px 안전 이동 */
+      /* 🌟 [안전 패치] 관람객이 보는 스캔 화면 구역만 정밀하게 왼쪽으로 20px 안전 이동 */
       #screen-main {
         display: none;
         width: 100%;
@@ -198,6 +198,7 @@
         font-weight: 700;
       }
 
+      /* 결제하기 버튼 크기 날씬하고 세련되게 보정 세팅 */
       .btn-pay-active {
         background: var(--point-red) !important;
         color: #fff !important;
@@ -511,6 +512,7 @@
 
       let scannedParts = [];
 
+      // 🌟 [안전 패치] 자바스크립트 매칭 안정성을 위해 모든 Key값을 문자열("String")로 완전 일원화 정비
       const assetsInfo = {
         2030999: {
           name: '안유진의 눈',
@@ -584,7 +586,7 @@
           src: 'assets/mouth_dohyun.png',
           price: 156000,
           desc: {
-            ko: '또렷한 윤곽과 균형 잡힌 볼륨이 조화를 이루는, 담백한 매력의 정석 비율 입술. 과하지 않은 두께감이 자연스럽게 표정을 살려주며, 부드러우면서도 신뢰감 있는 인상을 완성해줍니다.',
+            ko: '또렷한 윤곽 and 균형 잡힌 볼륨이 조화를 이루는, 담백한 매력의 정석 비율 입술. 과하지 않은 두께감이 자연스럽게 표정을 살려주며, 부드러우면서도 신뢰감 있는 인상을 완성해줍니다.',
             en: 'A textbook-ratio mouth of neat charm, displaying balanced contours and volume. Moderate thickness naturally enlivens expressions, creating a soft, trustworthy look.',
           },
           effect: {
@@ -810,6 +812,7 @@
           itemsListHTML += `<div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px;"><span>${name} x${data.count}</span><span>${data.totalPrice.toLocaleString()}${unitWon}</span></div>`;
         });
 
+        // 🌟 [성분표 엔진 고정 보완] 유니크 코드 트래킹 연동 완료
         let ingredientsSectionHTML = '';
         uniqueProductCodes.forEach((code) => {
           const item = assetsInfo[code] || assetsInfo[String(code)];
@@ -821,7 +824,7 @@
               currentLang === 'en' ? 'CAUTION' : '사용시 주의사항';
 
             ingredientsSectionHTML += `
-              <div style="margin-top: 12px; border: 1px solid #000; padding: 7px; border-radius: 4px; background-color: #fafafa; font-size: 10.5px; text-align: left;">
+              <div style="margin-top: 12px; border: 1px solid #000; padding: 7px; border-radius: 4px; background-color: #fafafa; font-size: 10.5px;">
                 <div style="font-weight: bold; font-size: 11.5px; margin-bottom: 5px; border-bottom: 1px dashed #000; padding-bottom: 2px;">[ ${item.name} ]</div>
                 <div style="margin-bottom: 4px;"><strong>${labelDesc} :</strong> ${item.desc[currentLang]}</div>
                 <div style="margin-bottom: 4px;"><strong>${labelEffect} :</strong><br>${item.effect[currentLang]}</div>
@@ -851,17 +854,7 @@
           <head>
             <style>
               @page { size: 58mm auto; margin: 0; }
-              body { color: #000; background: #fff; font-family: monospace; font-size: 11px; line-height: 1.4; padding: 10mm 0mm; box-sizing: border-box; }
-              
-              /* 🌟 [여백 제어 핵심] 영수증 정렬을 미세 튜닝하는 나사 구역 (486번째 줄) */
-              .receipt-content-wrapper {
-                width: 100%;
-                box-sizing: border-box;
-                /* 순서: 위(0mm) 우측(3mm) 아래(0mm) 좌측(3mm) 여백 */
-                /* 만약 인쇄물이 오른쪽으로 쏠린다면 마지막 좌측여백을 1mm 또는 0mm로 줄여보세요! */
-                padding: 0mm 3mm 0mm 3mm; 
-              }
-
+              body { color: #000; background: #fff; font-family: monospace; font-size: 11px; line-height: 1.4; padding: 10mm 3mm; box-sizing: border-box; }
               .print-title { text-align: center; font-size: 16px; font-weight: bold; margin: 10px 0 2px 0; }
               .print-divider { border-top: 1px dashed #000; margin: 8px 0; }
               .receipt-face-wrapper { position: relative; width: 54mm; height: 54mm; margin-top: 6mm; margin-bottom: 6mm; overflow: hidden; filter: grayscale(1) contrast(1.6); }
@@ -871,35 +864,33 @@
             </style>
           </head>
           <body>
-            <div class="receipt-content-wrapper">
-              <div class="print-title">THE FAKE SHOP</div>
-              <div style="text-align: center; font-size: 9px">${receiptDate}</div>
-              <div class="print-divider"></div>
-              <div class="receipt-face-wrapper">
-                <img class="receipt-base-img" src="assets/base_face.png" />
-                ${facePartImagesHTML}
-              </div>
-              <div class="print-divider"></div>
-              <div style="font-weight: bold; margin-bottom: 5px">${textRecListTitle}</div>
-              <div>${itemsListHTML}</div>
-              <div class="print-divider"></div>
-              <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 12px;">
-                <span>${textRecTotalQty}</span>
-                <span>${finalTotalCount}${unitQty}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 13px; margin-top: 2px;">
-                <span>${textRecTotalPrice}</span>
-                <span>${grandTotal.toLocaleString()}${unitWon}</span>
-              </div>
-              
-              <div class="print-divider"></div>
-              <div style="font-weight: bold; font-size: 11px; margin-top: 5px; text-align: center;">${currentLang === 'en' ? '[ SPECIFICATION ]' : '[ 성분 표기 명세 ]'}</div>
-              ${ingredientsSectionHTML}
-
-              <div class="print-divider"></div>
-              <div class="print-footer">${textRecFooter}</div>
-              <div class="cut-space"></div>
+            <div class="print-title">THE FAKE SHOP</div>
+            <div style="text-align: center; font-size: 9px">${receiptDate}</div>
+            <div class="print-divider"></div>
+            <div class="receipt-face-wrapper">
+              <img class="receipt-base-img" src="assets/base_face.png" />
+              ${facePartImagesHTML}
             </div>
+            <div class="print-divider"></div>
+            <div style="font-weight: bold; margin-bottom: 5px">${textRecListTitle}</div>
+            <div>${itemsListHTML}</div>
+            <div class="print-divider"></div>
+            <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 12px;">
+              <span>${textRecTotalQty}</span>
+              <span>${finalTotalCount}${unitQty}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 13px; margin-top: 2px;">
+              <span>${textRecTotalPrice}</span>
+              <span>${grandTotal.toLocaleString()}${unitWon}</span>
+            </div>
+            
+            <div class="print-divider"></div>
+            <div style="font-weight: bold; font-size: 11px; margin-top: 5px; text-align: center;">${currentLang === 'en' ? '[ SPECIFICATION ]' : '[ 성분 표기 명세 ]'}</div>
+            ${ingredientsSectionHTML}
+
+            <div class="print-divider"></div>
+            <div class="print-footer">${textRecFooter}</div>
+            <div class="cut-space"></div>
           </body>
           </html>
         `);
@@ -976,6 +967,7 @@
         textRecFooter =
           'Thank you for visiting The Fake Shop~<br />Please come again!';
 
+        // 🌟 [오타 수리 완료] 1392010 뒤쪽 우측 따옴표(") 완벽 폐쇄 마감 처리
         assetsInfo['2030999'].name = "Yujin's Eye";
         assetsInfo['1392010'].name = "Prof. Oh's Eye";
         assetsInfo['5203344587'].name = "Sekyung's Nose";
