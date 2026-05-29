@@ -297,8 +297,9 @@
         font-family: 'Jua', 'Fredoka', sans-serif !important;
       }
 
+      /* 🌐 우측 상단 언어 선택 제어 박스 */
       .language-box {
-        display: none;
+        display: block; /* 🌟 [수정] 대기화면(인트로) 상태에서도 무조건 처음부터 노출 */
         position: absolute;
         top: 2vh;
         right: 4vw;
@@ -355,6 +356,9 @@
         position: absolute;
         opacity: 0;
         pointer-events: none;
+      }
+      #print-receipt-zone {
+        display: none;
       }
     </style>
   </head>
@@ -505,8 +509,6 @@
 
       const baseImg = new Image();
       baseImg.src = 'assets/base_face.png';
-
-      // 🌟 [교정] 베이스 이미지가 다운로드 완료되면 캔버스를 즉시 그리도록 온로드 이벤트 연동! (첫 실행 시 검은 화면 문제 해결)
       baseImg.onload = function () {
         draw();
       };
@@ -523,7 +525,6 @@
       function startKiosk() {
         document.getElementById('screen-start').style.display = 'none';
         document.getElementById('screen-main').style.display = 'flex';
-        globalLangBox.style.display = 'block';
         globalBackBox.style.display = 'block';
         barcodeInput.focus();
         draw();
@@ -539,7 +540,6 @@
           updateDashboards();
           draw();
           document.getElementById('screen-main').style.display = 'none';
-          globalLangBox.style.display = 'none';
           globalBackBox.style.display = 'none';
           document.getElementById('screen-start').style.display = 'flex';
         }
@@ -646,7 +646,6 @@
         document.getElementById('modal-cart').style.display = 'flex';
       }
 
-      // 🌟 [인쇄 엔진 대개혁] 1초의 번쩍임을 원천 차단하고 완전 자동 백그라운드 인쇄를 처리하는 핵심 구역
       function actionPrintAndReset() {
         let facePartImagesHTML = '';
         const sortedParts = [...scannedParts].sort((a, b) => {
@@ -681,7 +680,12 @@
           itemsListHTML += `<div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px;"><span>${name} x${data.count}</span><span>${data.totalPrice.toLocaleString()}${unitWon}</span></div>`;
         });
 
-        // 💡 [치트키] 화면에 안 보이는 유령 iFrame(가상 프린트 윈도우) 빌드업
+        // 🌟 [수정] 영어 모드일 땐 날짜를 글로벌 포맷('en-US')으로 출력하고 한글일 땐 기본 출력
+        const receiptDate =
+          currentLang === 'en'
+            ? new Date().toLocaleString('en-US')
+            : new Date().toLocaleString();
+
         const iframe = document.createElement('iframe');
         iframe.style.position = 'fixed';
         iframe.style.width = '0';
@@ -702,12 +706,12 @@
               .receipt-face-wrapper { position: relative; width: 54mm; height: 54mm; margin-top: 6mm; margin-bottom: 6mm; overflow: hidden; filter: grayscale(1) contrast(1.6); }
               .receipt-base-img { width: 100%; height: 100%; display: block; object-fit: cover; }
               .print-footer { text-align: center; margin-top: 15px; font-size: 10px; }
-              .cut-space { height: 20mm; width: 100%; }
+              .cut-space { height: 5mm; width: 100%; } /* 🌟 [수정] 영수증 맨 밑 공백 20mm ➡️ 5mm 축소 마감 */
             </style>
           </head>
           <body>
             <div class="print-title">THE FAKE SHOP</div>
-            <div style="text-align: center; font-size: 9px">${new Date().toLocaleString()}</div>
+            <div style="text-align: center; font-size: 9px">${receiptDate}</div>
             <div class="print-divider"></div>
             <div class="receipt-face-wrapper">
               <img class="receipt-base-img" src="assets/base_face.png" />
@@ -733,16 +737,15 @@
         `);
         doc.close();
 
-        // 메인 화면 가림막 처리 후 인쇄 슛
         globalLangBox.style.display = 'none';
-        globalBackBox.style.display = 'none';
+        if (globalBackBox) globalBackBox.style.display = 'none';
 
         iframe.contentWindow.focus();
         iframe.contentWindow.print();
 
         setTimeout(() => {
           document.body.removeChild(iframe);
-          location.reload(); // 첫 메인화면 리셋 자동 복귀
+          location.reload();
         }, 300);
       }
 
@@ -776,6 +779,7 @@
         document.getElementById('text-modal-title').innerText =
           '주문 리스트 확인';
         document.getElementById('btn-final-pay').innerText = '최종 결제 진행';
+
         document.getElementById('btn-top-back').innerText = textBtnBack;
 
         if (document.getElementById('modal-cart').style.display === 'flex') {
