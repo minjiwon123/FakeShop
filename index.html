@@ -458,13 +458,13 @@
       }
 
       .dash-total-price {
-  font-size: 1.8vh;
-  font-weight: 700;
-  text-align: center;
-  line-height: 1.2;
-  margin-top: 1vh;
-  width: 100%;
-}
+        font-size: 1.8vh;
+        font-weight: 700;
+        text-align: center;
+        line-height: 1.2;
+        margin-top: 1vh;
+        width: 100%;
+      }
     </style>
   </head>
 
@@ -529,37 +529,31 @@
           </div>
 
           <div class="dash-section">
+            <button
+              class="btn-pay-active"
+              id="btn-open-cart"
+              onclick="openCart()"
+            >
+              결제하기
+            </button>
 
-  <button
-    class="btn-pay-active"
-    id="btn-open-cart"
-    onclick="openCart()"
-  >
-    결제하기
-  </button>
-
-  <div
-    id="dash-total-price"
-    class="dash-total-price"
-  >
-    총합 : 0원
-  </div>
-
-</div>
-</div>
+            <div id="dash-total-price" class="dash-total-price">총합 : 0원</div>
+          </div>
+        </div>
+      </div>
       <div id="modal-cart" class="modal">
         <h1 class="modal-title" id="text-modal-title">주문 리스트 확인</h1>
         <div id="cart-list"></div>
         <div class="cart-total-bar" id="cart-total-price">
           총 결제 금액: 0원
         </div>
-       <button
-  class="btn-pay-active"
-  id="btn-final-pay"
-  onclick="alert('버튼클릭')"
->
-  결제하기
-</button>
+        <button
+          class="btn-pay-active"
+          id="btn-final-pay"
+          onclick="alert('버튼클릭')"
+        >
+          결제하기
+        </button>
       </div>
 
       <input type="text" id="barcode-input" />
@@ -2485,15 +2479,15 @@ Depending on the environment, unexpected meal invitations and new ideas may occu
               ) || valStr;
 
             scannedParts.push({
-  code: exactCode,
-  name: assetsInfo[exactCode].name,
-  price: assetsInfo[exactCode].price,
+              code: exactCode,
+              name: assetsInfo[exactCode].name,
+              price: assetsInfo[exactCode].price,
 
-  randomX: (Math.random() - 0.5) * 180,
-  randomY: (Math.random() - 0.5) * 300,
+              randomX: (Math.random() - 0.5) * 180,
+              randomY: (Math.random() - 0.5) * 300,
 
-  rotation: Math.random() * 24 - 12,
-});
+              rotation: Math.random() * 24 - 12,
+            });
             updateDashboards();
             draw();
           }
@@ -2582,10 +2576,9 @@ Depending on the environment, unexpected meal invitations and new ideas may occu
         });
         const totalDiv = document.getElementById('dash-total-price');
 
-if (totalDiv) {
-  totalDiv.innerText =
-    `총합 : ${grandTotal.toLocaleString()}${unitWon}`;
-}
+        if (totalDiv) {
+          totalDiv.innerText = `총합 : ${grandTotal.toLocaleString()}${unitWon}`;
+        }
       }
 
       function openCart() {
@@ -2760,9 +2753,9 @@ if (totalDiv) {
             iframe.contentWindow.focus();
             iframe.contentWindow.print();
             iframe.contentWindow.onafterprint = () => {
-  document.body.removeChild(iframe);
-  location.reload();
-};
+              document.body.removeChild(iframe);
+              location.reload();
+            };
           }
         }
 
@@ -2775,9 +2768,9 @@ if (totalDiv) {
           }
         }
         iframe.contentWindow.onafterprint = () => {
-  document.body.removeChild(iframe);
-  location.reload();
-};
+          document.body.removeChild(iframe);
+          location.reload();
+        };
       }
 
       function changeToKorean() {
