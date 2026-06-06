@@ -553,13 +553,13 @@
         <div class="cart-total-bar" id="cart-total-price">
           총 결제 금액: 0원
         </div>
-        <button
-          class="btn-pay-active"
-          id="btn-final-pay"
-          onclick="actionPrintAndReset()"
-        >
-          결제하기
-        </button>
+       <button
+  class="btn-pay-active"
+  id="btn-final-pay"
+  onclick="alert('버튼클릭')"
+>
+  결제하기
+</button>
       </div>
 
       <input type="text" id="barcode-input" />
@@ -2621,7 +2621,6 @@ if (totalDiv) {
       }
 
       function actionPrintAndReset() {
-          alert("들어옴");
         let facePartImagesHTML = '';
         const sortedParts = [...scannedParts].sort((a, b) => {
           if (assetsInfo[a.code].type === 'mole') return 1;
