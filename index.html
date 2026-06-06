@@ -2580,6 +2580,12 @@ Depending on the environment, unexpected meal invitations and new ideas may occu
           qtyDiv.scrollTop = qtyDiv.scrollHeight;
           priceDiv.scrollTop = priceDiv.scrollHeight;
         });
+        const totalDiv = document.getElementById('dash-total-price');
+
+if (totalDiv) {
+  totalDiv.innerText =
+    `총합 : ${grandTotal.toLocaleString()}${unitWon}`;
+}
       }
 
       function openCart() {
