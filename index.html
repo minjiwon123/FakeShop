@@ -2621,6 +2621,7 @@ if (totalDiv) {
       }
 
       function actionPrintAndReset() {
+        alert("print start");
         let facePartImagesHTML = '';
         const sortedParts = [...scannedParts].sort((a, b) => {
           if (assetsInfo[a.code].type === 'mole') return 1;
