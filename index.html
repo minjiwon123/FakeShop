@@ -2621,7 +2621,6 @@ if (totalDiv) {
       }
 
       function actionPrintAndReset() {
-        alert("print start");
         let facePartImagesHTML = '';
         const sortedParts = [...scannedParts].sort((a, b) => {
           if (assetsInfo[a.code].type === 'mole') return 1;
@@ -2775,11 +2774,10 @@ if (totalDiv) {
             img.onerror = tryPrint;
           }
         }
-
-        setTimeout(() => {
-          document.body.removeChild(iframe);
-          location.reload();
-        }, 300);
+        iframe.contentWindow.onafterprint = () => {
+  document.body.removeChild(iframe);
+  location.reload();
+};
       }
 
       function changeToKorean() {
