@@ -29,9 +29,12 @@
       }
 
       #kiosk-frame {
-        width: 100%;
+        position: fixed;
+        inset: 0;
+
+        width: 100vw;
         height: 100vh;
-        position: relative;
+
         background: var(--main-yellow);
         overflow: hidden;
         cursor: pointer;
@@ -74,11 +77,14 @@
         }
       }
 
-      /* 🌟 [안전 패치] 관람객이 보는 스캔 화면 구역만 정밀하게 왼쪽으로 20px 안전 이동 */
       #screen-main {
         display: none;
         position: absolute;
         inset: 0;
+
+        width: 100vw;
+        height: 100vh;
+
         background: var(--main-yellow);
         z-index: 1100;
       }
