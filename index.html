@@ -458,16 +458,13 @@
       }
 
       .dash-total-price {
-        font-size: 2.4vh;
-
-        font-weight: 700;
-
-        text-align: center;
-
-        line-height: 1.2;
-
-        margin-top: 8px;
-      }
+  font-size: 1.8vh;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.2;
+  margin-top: 1vh;
+  width: 100%;
+}
     </style>
   </head>
 
@@ -532,18 +529,23 @@
           </div>
 
           <div class="dash-section">
-            <button
-              class="btn-pay-active"
-              id="btn-open-cart"
-              onclick="openCart()"
-            >
-              결제하기
-            </button>
-          </div>
 
-          <div id="dash-total-price" class="dash-total-price">총합 : 0원</div>
-        </div>
-      </div>
+  <button
+    class="btn-pay-active"
+    id="btn-open-cart"
+    onclick="openCart()"
+  >
+    결제하기
+  </button>
+
+  <div
+    id="dash-total-price"
+    class="dash-total-price"
+  >
+    총합 : 0원
+  </div>
+
+</div>
 
       <div id="modal-cart" class="modal">
         <h1 class="modal-title" id="text-modal-title">주문 리스트 확인</h1>
