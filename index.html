@@ -2621,6 +2621,7 @@ if (totalDiv) {
       }
 
       function actionPrintAndReset() {
+          alert("들어옴");
         let facePartImagesHTML = '';
         const sortedParts = [...scannedParts].sort((a, b) => {
           if (assetsInfo[a.code].type === 'mole') return 1;
@@ -2757,7 +2758,6 @@ if (totalDiv) {
           loaded++;
 
           if (loaded >= images.length) {
-            console.log("PRINT START");
             iframe.contentWindow.focus();
             iframe.contentWindow.print();
             iframe.contentWindow.onafterprint = () => {
