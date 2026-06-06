@@ -531,867 +531,874 @@
     </div>
 
     <script>
-      let currentLang = 'ko';
-      let unitQty = '개';
-      let unitWon = '원';
-      let textModalTotal = '총 결제 금액: ';
-      let textBtnBack = '이전으로';
-      let textBtnPayFinal = '결제하기';
+            let currentLang = 'ko';
+            let unitQty = '개';
+            let unitWon = '원';
+            let textModalTotal = '총 결제 금액: ';
+            let textBtnBack = '이전으로';
+            let textBtnPayFinal = '결제하기';
 
-      let textRecListTitle = '[구매 확정 목록]';
-      let textRecTotalQty = '총 수량';
-      let textRecTotalPrice = '총 결제 금액';
-      let textRecFooter =
-        '안녕하세요~ The Fake Shop 입니다~<br />또 이용해 주세요!';
+            let textRecListTitle = '[구매 확정 목록]';
+            let textRecTotalQty = '총 수량';
+            let textRecTotalPrice = '총 결제 금액';
+            let textRecFooter =
+              '안녕하세요~ The Fake Shop 입니다~<br />또 이용해 주세요!';
 
-      const canvas = document.getElementById('faceCanvas');
-      const ctx = canvas.getContext('2d');
-      const barcodeInput = document.getElementById('barcode-input');
-      const globalLangBox = document.getElementById('global-lang-box');
-      const globalBackBox = document.getElementById('global-back-box');
+            const canvas = document.getElementById('faceCanvas');
+            const ctx = canvas.getContext('2d');
+            const barcodeInput = document.getElementById('barcode-input');
+            const globalLangBox = document.getElementById('global-lang-box');
+            const globalBackBox = document.getElementById('global-back-box');
 
-      let scannedParts = [];
+            let scannedParts = [];
 
-      // 🌟 [안전 패치] 자바스크립트 매칭 안정성을 위해 모든 Key값을 문자열("String")로 완전 일원화 정비
-      const assetsInfo = {
-        830471920186: {
-          name: 'Storybook Eyes',
-          type: 'eye',
-          src: 'assets/eye_storybook.png',
-          price: 59000,
-        },
-        830471920154: {
-          name: 'Sunshine Deer Eyes',
-          type: 'eye',
-          src: 'assets/eye_sunshine_deer.png',
-          price: 79000,
-        },
-        830471920190: {
-          name: 'Porcelain Doll Eyes',
-          type: 'eye',
-          src: 'assets/eye_porcelain_doll.png',
-          price: 129000,
-        },
-        830471920263: {
-          name: 'Pure Hero Eyes',
-          type: 'eye',
-          src: 'assets/eye_pure_hero.png',
-          price: 189000,
-        },
+            // 🌟 [안전 패치] 자바스크립트 매칭 안정성을 위해 모든 Key값을 문자열("String")로 완전 일원화 정비
+            const assetsInfo = {
 
-        830471920227: {
-          name: 'Royal Fox Eyes',
-          type: 'eye',
-          src: 'assets/eye_royal_fox.png',
-          price: 239000,
-        },
-        830471920168: {
-          name: 'Velvet Puppy Eyes',
-          type: 'eye',
-          src: 'assets/eye_velvet_puppy.png',
-          price: 89000,
-        },
-        830471920259: {
-          name: 'Warm Melody Eyes',
-          type: 'eye',
-          src: 'assets/eye_warm_melody.png',
-          price: 149000,
-        },
-        830471920172: {
-          name: 'Snow Crystal Eyes',
-          type: 'eye',
-          src: 'assets/eye_snow_crystal.png',
-          price: 99000,
-        },
-
-        830471920231: {
-          name: 'Stage Prince Eyes',
-          type: 'eye',
-          src: 'assets/eye_stage_prince.png',
-          price: 259000,
-        },
-        830471920209: {
-          name: 'Midnight Cat Eyes',
-          type: 'eye',
-          src: 'assets/eye_midnight_cat.png',
-          price: 219000,
-        },
-        830471920245: {
-          name: 'Urban Idol Eyes',
-          type: 'eye',
-          src: 'assets/eye_urban_idol.png',
-          price: 299000,
-        },
-        830471920213: {
-          name: 'Moonlit Cat Eyes',
-          type: 'eye',
-          src: 'assets/eye_moonlit_cat.png',
-          price: 179000,
-        },
-
-        830471920540: {
-          name: 'Ivory Straight Nose',
-          type: 'nose',
-          src: 'assets/nose_ivory_straight.png',
-          price: 99000,
-        },
-        830471920481: {
-          name: 'Global Icon Nose',
-          type: 'nose',
-          src: 'assets/nose_global_icon.png',
-          price: 359000,
-        },
-        830471920536: {
-          name: 'Fresh Bloom Nose',
-          type: 'nose',
-          src: 'assets/nose_fresh_bloom.png',
-          price: 119000,
-        },
-        830471920518: {
-          name: 'Gentle Prince Nose',
-          type: 'nose',
-          src: 'assets/nose_gentle_prince.png',
-          price: 229000,
-        },
-
-        830471920495: {
-          name: 'Modern Actor Nose',
-          type: 'nose',
-          src: 'assets/nose_modern_actor.png',
-          price: 279000,
-        },
-        830471920522: {
-          name: 'Venus Line Nose',
-          type: 'nose',
-          src: 'assets/nose_venus_line.png',
-          price: 149000,
-        },
-        830471920504: {
-          name: 'Luxe Muse Nose',
-          type: 'nose',
-          src: 'assets/nose_luxe_muse.png',
-          price: 399000,
-        },
-
-        830471920413: {
-          name: 'Berry Smile Lips',
-          type: 'mouth',
-          src: 'assets/mouth_berry_smile.png',
-          price: 89000,
-        },
-
-        830471920390: {
-          name: 'Hollywood Glam Lips',
-          type: 'mouth',
-          src: 'assets/mouth_hollywood_glam.png',
-          price: 299000,
-        },
-
-        830471920445: {
-          name: 'Pure Ribbon Lips',
-          type: 'mouth',
-          src: 'assets/mouth_pure_ribbon.png',
-          price: 119000,
-        },
-
-        830471920477: {
-          name: 'First Love Lips',
-          type: 'mouth',
-          src: 'assets/mouth_first_love.png',
-          price: 79000,
-        },
-
-        830471920459: {
-          name: 'Champion Smile Lips',
-          type: 'mouth',
-          src: 'assets/mouth_champion_smile.png',
-          price: 249000,
-        },
-
-        830471920427: {
-          name: 'Soft Romance Lips',
-          type: 'mouth',
-          src: 'assets/mouth_soft_romance.png',
-          price: 139000,
-        },
-
-        830471920463: {
-          name: 'Power Glam Lips',
-          type: 'mouth',
-          src: 'assets/mouth_power_glam.png',
-          price: 329000,
-        },
-
-        830471920431: {
-          name: 'Gentle Prince Lips',
-          type: 'mouth',
-          src: 'assets/mouth_gentle_prince.png',
-          price: 199000,
-        },
-
-        830471920409: {
-          name: 'Chic Edge Lips',
-          type: 'mouth',
-          src: 'assets/mouth_chic_edge.png',
-          price: 279000,
-        },
-
-        830471920281: {
-          name: 'Noble Romance Lips',
-          type: 'mouth',
-          src: 'assets/mouth_noble_romance.png',
-          price: 359000,
-        },
-
-        // ======== DOT ========
-
-        830471920336: {
-          name: 'Classic Idol Dot',
-          type: 'mole',
-          src: 'assets/dot_classic_idol.png',
-          price: 39000,
-        },
-
-        830471920386: {
-          name: 'Rebel Star Dot',
-          type: 'mole',
-          src: 'assets/dot_rebel_star.png',
-          price: 69000,
-        },
-
-        830471920322: {
-          name: 'Romantic Hero Dot',
-          type: 'mole',
-          src: 'assets/dot_romantic_hero.png',
-          price: 79000,
-        },
-
-        830471920354: {
-          name: 'Actress Signature Dot',
-          type: 'mole',
-          src: 'assets/dot_actress_signature.png',
-          price: 99000,
-        },
-
-        830471920372: {
-          name: 'Princess Point Dot',
-          type: 'mole',
-          src: 'assets/dot_princess_point.png',
-          price: 59000,
-        },
-
-        830471920340: {
-          name: 'Fashion Muse Dot',
-          type: 'mole',
-          src: 'assets/dot_fashion_muse.png',
-          price: 89000,
-        },
-
-        830471920368: {
-          name: 'Diamond Charm Dot',
-          type: 'mole',
-          src: 'assets/dot_diamond_charm.png',
-          price: 129000,
-        },
-
-        830471920631: {
-          name: '도연 교수님의 눈',
-          type: 'eye',
-          src: 'assets/prof_doyeon.png',
-          price: 599000,
-        },
-        830471920613: {
-          name: '민혁 교수님의 눈',
-          type: 'eye',
-          src: 'assets/prof_minhyuk.png',
-          price: 579000,
-        },
-        830471920572: {
-          name: '보슬 교수님의 눈',
-          type: 'eye',
-          src: 'assets/prof_boseul.png',
-          price: 549000,
-        },
-        830471920609: {
-          name: '승범 교수님의 눈',
-          type: 'eye',
-          src: 'assets/prof_seungbeom.png',
-          price: 559000,
-        },
-        830471920586: {
-          name: '유미 교수님의 눈',
-          type: 'eye',
-          src: 'assets/prof_yumi.png',
-          price: 529000,
-        },
-
-        830471920554: {
-          name: '재하 교수님의 눈',
-          type: 'eye',
-          src: 'assets/prof_jaeha.png',
-          price: 499000,
-        },
-        830471920590: {
-          name: '주혜 교수님의 눈',
-          type: 'eye',
-          src: 'assets/prof_juhye.png',
-          price: 549000,
-        },
-        830471920568: {
-          name: '준현 교수님의 눈',
-          type: 'eye',
-          src: 'assets/prof_junhyun.png',
-          price: 519000,
-        },
-        830471920277: {
-          name: '재훈 교수님의 눈',
-          type: 'eye',
-          src: 'assets/prof_jaehun.png',
-          price: 489000,
-        },
-        830471920627: {
-          name: '호남 교수님의 눈',
-          type: 'eye',
-          src: 'assets/prof_honam.png',
-          price: 469000,
-        },
-      };
-
-      const baseImg = new Image();
-      baseImg.src = 'assets/base_face.png';
-      baseImg.onload = function () {
-        draw();
-      };
-
-      const loadedImages = {};
-
-      Object.keys(assetsInfo).forEach((code) => {
-        const img = new Image();
-        img.src = assetsInfo[code].src;
-        loadedImages[code] = img;
-        img.onload = draw;
-      });
-
-      function startKiosk() {
-        document.getElementById('screen-start').style.display = 'none';
-        document.getElementById('screen-main').style.display = 'flex';
-        globalBackBox.style.display = 'block';
-        barcodeInput.focus();
-        draw();
+              830471920281: {
+        name:'Noble Romance Lips',
+        type:'mouth',
+        src:'assets/eye_storybook.png',
+        price:359000
       }
+              830471920186: {
+                name: 'Storybook Eyes',
+                type: 'eye',
+                src: 'assets/eye_storybook.png',
+                price: 59000,
+              },
+              830471920154: {
+                name: 'Sunshine Deer Eyes',
+                type: 'eye',
+                src: 'assets/eye_sunshine_deer.png',
+                price: 79000,
+              },
+              830471920190: {
+                name: 'Porcelain Doll Eyes',
+                type: 'eye',
+                src: 'assets/eye_porcelain_doll.png',
+                price: 129000,
+              },
+              830471920263: {
+                name: 'Pure Hero Eyes',
+                type: 'eye',
+                src: 'assets/eye_pure_hero.png',
+                price: 189000,
+              },
 
-      function handleBackAction() {
-        if (document.getElementById('modal-cart').style.display === 'flex') {
-          document.getElementById('modal-cart').style.display = 'none';
-          document.getElementById('screen-main').style.display = 'flex';
-          barcodeInput.focus();
-        } else {
-          scannedParts = [];
-          updateDashboards();
-          draw();
-          document.getElementById('screen-main').style.display = 'none';
-          globalBackBox.style.display = 'none';
-          document.getElementById('screen-start').style.display = 'flex';
-        }
-      }
+              830471920227: {
+                name: 'Royal Fox Eyes',
+                type: 'eye',
+                src: 'assets/eye_royal_fox.png',
+                price: 239000,
+              },
+              830471920168: {
+                name: 'Velvet Puppy Eyes',
+                type: 'eye',
+                src: 'assets/eye_velvet_puppy.png',
+                price: 89000,
+              },
+              830471920259: {
+                name: 'Warm Melody Eyes',
+                type: 'eye',
+                src: 'assets/eye_warm_melody.png',
+                price: 149000,
+              },
+              830471920172: {
+                name: 'Snow Crystal Eyes',
+                type: 'eye',
+                src: 'assets/eye_snow_crystal.png',
+                price: 99000,
+              },
 
-      function draw() {
-        ctx.clearRect(0, 0, 1280, 1280);
-        if (baseImg.complete) {
-          const scale = Math.max(1280 / baseImg.width, 1280 / baseImg.height);
-          const x = (1280 - baseImg.width * scale) / 2;
-          const y = (1280 - baseImg.height * scale) / 2;
-          ctx.drawImage(
-            baseImg,
-            x,
-            y,
-            baseImg.width * scale,
-            baseImg.height * scale,
-          );
-        }
-        const sortedParts = [...scannedParts].sort((a, b) => {
-          if (assetsInfo[a.code].type === 'mole') return 1;
-          if (assetsInfo[b.code].type === 'mole') return -1;
-          return 0;
-        });
-        sortedParts.forEach((part) => {
-          const img =
-            loadedImages[part.code] || loadedImages[String(part.code)];
-          if (img && img.complete) {
-            ctx.drawImage(img, part.randomX, part.randomY, 1280, 1280);
-          }
-        });
-      }
+              830471920231: {
+                name: 'Stage Prince Eyes',
+                type: 'eye',
+                src: 'assets/eye_stage_prince.png',
+                price: 259000,
+              },
+              830471920209: {
+                name: 'Midnight Cat Eyes',
+                type: 'eye',
+                src: 'assets/eye_midnight_cat.png',
+                price: 219000,
+              },
+              830471920245: {
+                name: 'Urban Idol Eyes',
+                type: 'eye',
+                src: 'assets/eye_urban_idol.png',
+                price: 299000,
+              },
+              830471920213: {
+                name: 'Moonlit Cat Eyes',
+                type: 'eye',
+                src: 'assets/eye_moonlit_cat.png',
+                price: 179000,
+              },
 
-      barcodeInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          const valStr = e.target.value.replace(/\s/g, '').trim();
-          const valNum = Number(valStr);
-          const info = assetsInfo[valStr] || assetsInfo[valNum];
+              830471920540: {
+                name: 'Ivory Straight Nose',
+                type: 'nose',
+                src: 'assets/nose_ivory_straight.png',
+                price: 99000,
+              },
+              830471920481: {
+                name: 'Global Icon Nose',
+                type: 'nose',
+                src: 'assets/nose_global_icon.png',
+                price: 359000,
+              },
+              830471920536: {
+                name: 'Fresh Bloom Nose',
+                type: 'nose',
+                src: 'assets/nose_fresh_bloom.png',
+                price: 119000,
+              },
+              830471920518: {
+                name: 'Gentle Prince Nose',
+                type: 'nose',
+                src: 'assets/nose_gentle_prince.png',
+                price: 229000,
+              },
 
-          if (info) {
-            const exactCode =
-              Object.keys(assetsInfo).find(
-                (key) => key == valStr || Number(key) == valNum,
-              ) || valStr;
+              830471920495: {
+                name: 'Modern Actor Nose',
+                type: 'nose',
+                src: 'assets/nose_modern_actor.png',
+                price: 279000,
+              },
+              830471920522: {
+                name: 'Venus Line Nose',
+                type: 'nose',
+                src: 'assets/nose_venus_line.png',
+                price: 149000,
+              },
+              830471920504: {
+                name: 'Luxe Muse Nose',
+                type: 'nose',
+                src: 'assets/nose_luxe_muse.png',
+                price: 399000,
+              },
 
-            scannedParts.push({
-              code: exactCode,
-              name: info.name,
-              price: info.price,
-              randomX: (Math.random() - 0.5) * 180,
-              randomY: (Math.random() - 0.5) * 300,
+              830471920413: {
+                name: 'Berry Smile Lips',
+                type: 'mouth',
+                src: 'assets/mouth_berry_smile.png',
+                price: 89000,
+              },
+
+              830471920390: {
+                name: 'Hollywood Glam Lips',
+                type: 'mouth',
+                src: 'assets/mouth_hollywood_glam.png',
+                price: 299000,
+              },
+
+              830471920445: {
+                name: 'Pure Ribbon Lips',
+                type: 'mouth',
+                src: 'assets/mouth_pure_ribbon.png',
+                price: 119000,
+              },
+
+              830471920477: {
+                name: 'First Love Lips',
+                type: 'mouth',
+                src: 'assets/mouth_first_love.png',
+                price: 79000,
+              },
+
+              830471920459: {
+                name: 'Champion Smile Lips',
+                type: 'mouth',
+                src: 'assets/mouth_champion_smile.png',
+                price: 249000,
+              },
+
+              830471920427: {
+                name: 'Soft Romance Lips',
+                type: 'mouth',
+                src: 'assets/mouth_soft_romance.png',
+                price: 139000,
+              },
+
+              830471920463: {
+                name: 'Power Glam Lips',
+                type: 'mouth',
+                src: 'assets/mouth_power_glam.png',
+                price: 329000,
+              },
+
+              830471920431: {
+                name: 'Gentle Prince Lips',
+                type: 'mouth',
+                src: 'assets/mouth_gentle_prince.png',
+                price: 199000,
+              },
+
+              830471920409: {
+                name: 'Chic Edge Lips',
+                type: 'mouth',
+                src: 'assets/mouth_chic_edge.png',
+                price: 279000,
+              },
+
+              830471920281: {
+                name: 'Noble Romance Lips',
+                type: 'mouth',
+                src: 'assets/mouth_noble_romance.png',
+                price: 359000,
+              },
+
+              // ======== DOT ========
+
+              830471920336: {
+                name: 'Classic Idol Dot',
+                type: 'mole',
+                src: 'assets/dot_classic_idol.png',
+                price: 39000,
+              },
+
+              830471920386: {
+                name: 'Rebel Star Dot',
+                type: 'mole',
+                src: 'assets/dot_rebel_star.png',
+                price: 69000,
+              },
+
+              830471920322: {
+                name: 'Romantic Hero Dot',
+                type: 'mole',
+                src: 'assets/dot_romantic_hero.png',
+                price: 79000,
+              },
+
+              830471920354: {
+                name: 'Actress Signature Dot',
+                type: 'mole',
+                src: 'assets/dot_actress_signature.png',
+                price: 99000,
+              },
+
+              830471920372: {
+                name: 'Princess Point Dot',
+                type: 'mole',
+                src: 'assets/dot_princess_point.png',
+                price: 59000,
+              },
+
+              830471920340: {
+                name: 'Fashion Muse Dot',
+                type: 'mole',
+                src: 'assets/dot_fashion_muse.png',
+                price: 89000,
+              },
+
+              830471920368: {
+                name: 'Diamond Charm Dot',
+                type: 'mole',
+                src: 'assets/dot_diamond_charm.png',
+                price: 129000,
+              },
+
+              830471920631: {
+                name: '도연 교수님의 눈',
+                type: 'eye',
+                src: 'assets/prof_doyeon.png',
+                price: 599000,
+              },
+              830471920613: {
+                name: '민혁 교수님의 눈',
+                type: 'eye',
+                src: 'assets/prof_minhyuk.png',
+                price: 579000,
+              },
+              830471920572: {
+                name: '보슬 교수님의 눈',
+                type: 'eye',
+                src: 'assets/prof_boseul.png',
+                price: 549000,
+              },
+              830471920609: {
+                name: '승범 교수님의 눈',
+                type: 'eye',
+                src: 'assets/prof_seungbeom.png',
+                price: 559000,
+              },
+              830471920586: {
+                name: '유미 교수님의 눈',
+                type: 'eye',
+                src: 'assets/prof_yumi.png',
+                price: 529000,
+              },
+
+              830471920554: {
+                name: '재하 교수님의 눈',
+                type: 'eye',
+                src: 'assets/prof_jaeha.png',
+                price: 499000,
+              },
+              830471920590: {
+                name: '주혜 교수님의 눈',
+                type: 'eye',
+                src: 'assets/prof_juhye.png',
+                price: 549000,
+              },
+              830471920568: {
+                name: '준현 교수님의 눈',
+                type: 'eye',
+                src: 'assets/prof_junhyun.png',
+                price: 519000,
+              },
+              830471920277: {
+                name: '재훈 교수님의 눈',
+                type: 'eye',
+                src: 'assets/prof_jaehun.png',
+                price: 489000,
+              },
+              830471920627: {
+                name: '호남 교수님의 눈',
+                type: 'eye',
+                src: 'assets/prof_honam.png',
+                price: 469000,
+              },
+            };
+
+            const baseImg = new Image();
+            baseImg.src = 'assets/base_face.png';
+            baseImg.onload = function () {
+              draw();
+            };
+
+            const loadedImages = {};
+
+            Object.keys(assetsInfo).forEach((code) => {
+              const img = new Image();
+              img.src = assetsInfo[code].src;
+              loadedImages[code] = img;
+              img.onload = draw;
             });
-            updateDashboards();
-            draw();
-          }
-          e.target.value = '';
-        }
-      });
 
-      function updateDashboards() {
-        const nameDiv = document.getElementById('dash-name-list');
-        const qtyDiv = document.getElementById('dash-qty-list');
-        const priceDiv = document.getElementById('dash-price-list');
+            function startKiosk() {
+              document.getElementById('screen-start').style.display = 'none';
+              document.getElementById('screen-main').style.display = 'flex';
+              globalBackBox.style.display = 'block';
+              barcodeInput.focus();
+              draw();
+            }
 
-        const summary = new Map();
+            function handleBackAction() {
+              if (document.getElementById('modal-cart').style.display === 'flex') {
+                document.getElementById('modal-cart').style.display = 'none';
+                document.getElementById('screen-main').style.display = 'flex';
+                barcodeInput.focus();
+              } else {
+                scannedParts = [];
+                updateDashboards();
+                draw();
+                document.getElementById('screen-main').style.display = 'none';
+                globalBackBox.style.display = 'none';
+                document.getElementById('screen-start').style.display = 'flex';
+              }
+            }
 
-        scannedParts.forEach((p) => {
-          const currentName = assetsInfo[p.code].name;
+            function draw() {
+              ctx.clearRect(0, 0, 1280, 1280);
+              if (baseImg.complete) {
+                const scale = Math.max(1280 / baseImg.width, 1280 / baseImg.height);
+                const x = (1280 - baseImg.width * scale) / 2;
+                const y = (1280 - baseImg.height * scale) / 2;
+                ctx.drawImage(
+                  baseImg,
+                  x,
+                  y,
+                  baseImg.width * scale,
+                  baseImg.height * scale,
+                );
+              }
+              const sortedParts = [...scannedParts].sort((a, b) => {
+                if (assetsInfo[a.code].type === 'mole') return 1;
+                if (assetsInfo[b.code].type === 'mole') return -1;
+                return 0;
+              });
+              sortedParts.forEach((part) => {
+                const img =
+                  loadedImages[part.code] || loadedImages[String(part.code)];
+                if (img && img.complete) {
+                  ctx.drawImage(img, part.randomX, part.randomY, 1280, 1280);
+                }
+              });
+            }
 
-          if (summary.has(currentName)) {
-            const old = summary.get(currentName);
+            barcodeInput.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') {
+                const valStr = e.target.value.replace(/\s/g, '').trim();
+                const valNum = Number(valStr);
+                const info = assetsInfo[valStr] || assetsInfo[valNum];
 
-            summary.delete(currentName);
+                if (info) {
+                  const exactCode =
+                    Object.keys(assetsInfo).find(
+                      (key) => key == valStr || Number(key) == valNum,
+                    ) || valStr;
 
-            summary.set(currentName, {
-              count: old.count + 1,
-              totalPrice: old.totalPrice + p.price,
-              code: p.code,
+                  scannedParts.push({
+                    code: exactCode,
+                    name: info.name,
+                    price: info.price,
+                    randomX: (Math.random() - 0.5) * 180,
+                    randomY: (Math.random() - 0.5) * 300,
+                  });
+                  updateDashboards();
+                  draw();
+                }
+                e.target.value = '';
+              }
             });
-          } else {
-            summary.set(currentName, {
-              count: 1,
-              totalPrice: p.price,
-              code: p.code,
-            });
-          }
-        });
 
-        nameDiv.innerHTML = '';
-        qtyDiv.innerHTML = '';
-        priceDiv.innerHTML = '';
+            function updateDashboards() {
+              const nameDiv = document.getElementById('dash-name-list');
+              const qtyDiv = document.getElementById('dash-qty-list');
+              const priceDiv = document.getElementById('dash-price-list');
 
-        summary.forEach((data, name) => {
-          nameDiv.innerHTML += `
-      <div class="item-row">
-        <span>${name}</span>
-        <button
-          class="item-delete"
-          onclick="removeItem('${data.code}')"
-        >
-          ✕
-        </button>
-      </div>
-    `;
+              const summary = new Map();
 
-          qtyDiv.innerHTML += `
-      <div class="qty-row">
-        <button
-          class="qty-btn"
-          onclick="decreaseItem('${data.code}')"
-        >−</button>
+              scannedParts.forEach((p) => {
+                const currentName = assetsInfo[p.code].name;
 
-        <span>${data.count}${unitQty}</span>
+                if (summary.has(currentName)) {
+                  const old = summary.get(currentName);
 
-        <button
-          class="qty-btn"
-          onclick="increaseItem('${data.code}')"
-        >+</button>
-      </div>
-    `;
+                  summary.delete(currentName);
 
-          priceDiv.innerHTML += `
-      <div class="price-row">
-        ${data.totalPrice.toLocaleString()}${unitWon}
-      </div>
-    `;
-        });
+                  summary.set(currentName, {
+                    count: old.count + 1,
+                    totalPrice: old.totalPrice + p.price,
+                    code: p.code,
+                  });
+                } else {
+                  summary.set(currentName, {
+                    count: 1,
+                    totalPrice: p.price,
+                    code: p.code,
+                  });
+                }
+              });
 
-        nameDiv.scrollTop = nameDiv.scrollHeight;
-        qtyDiv.scrollTop = qtyDiv.scrollHeight;
-        priceDiv.scrollTop = priceDiv.scrollHeight;
-      }
+              nameDiv.innerHTML = '';
+              qtyDiv.innerHTML = '';
+              priceDiv.innerHTML = '';
 
-      function openCart() {
-        document.getElementById('screen-main').style.display = 'none';
-        const list = document.getElementById('cart-list');
-        list.innerHTML = '';
-        const summary = {};
-        let grandTotal = 0;
-
-        scannedParts.forEach((p) => {
-          const currentName = assetsInfo[p.code].name;
-          if (!summary[currentName]) {
-            summary[currentName] = { count: 0, totalPrice: 0 };
-          }
-          summary[currentName].count += 1;
-          summary[currentName].totalPrice += p.price;
-          grandTotal += p.price;
-        });
-
-        Object.entries(summary).forEach(([name, data]) => {
-          list.innerHTML += `
-            <div style="display:flex; justify-content:space-between; margin-bottom:1.5vh;">
-                <span>${name} (${data.count}${unitQty})</span>
-                <span style="color:var(--stroke-orange); font-weight:900;">${data.totalPrice.toLocaleString()}${unitWon}</span>
+              summary.forEach((data, name) => {
+                nameDiv.innerHTML += `
+            <div class="item-row">
+              <span>${name}</span>
+              <button
+                class="item-delete"
+                onclick="removeItem('${data.code}')"
+              >
+                ✕
+              </button>
             </div>
           `;
-        });
-        document.getElementById('cart-total-price').innerText =
-          `${textModalTotal}${grandTotal.toLocaleString()}${unitWon}`;
 
-        document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
-        document.getElementById('modal-cart').style.display = 'flex';
-      }
+                qtyDiv.innerHTML += `
+            <div class="qty-row">
+              <button
+                class="qty-btn"
+                onclick="decreaseItem('${data.code}')"
+              >−</button>
 
-      function actionPrintAndReset() {
-        let facePartImagesHTML = '';
-        const sortedParts = [...scannedParts].sort((a, b) => {
-          if (assetsInfo[a.code].type === 'mole') return 1;
-          if (assetsInfo[b.code].type === 'mole') return -1;
-          return 0;
-        });
+              <span>${data.count}${unitQty}</span>
 
-        sortedParts.forEach((part) => {
-          const scaleRatio = 48 / 1280;
-          const moveX = part.randomX * scaleRatio;
-          const moveY = part.randomY * scaleRatio;
-          facePartImagesHTML += `<img style="position: absolute; width: 48mm; height: 48mm; top: 0; left: 0; object-fit: cover; transform-origin: top left; mix-blend-mode: multiply; filter: grayscale(1) brightness(0) contrast(999); image-rendering: pixelated; transform: translate(${moveX}mm, ${moveY}mm);" src="${assetsInfo[part.code].src}" />`;
-        });
-
-        let itemsListHTML = '';
-        const summary = {};
-        let grandTotal = 0;
-        const uniqueProductCodes = new Set();
-
-        scannedParts.forEach((p) => {
-          uniqueProductCodes.add(p.code);
-          const currentName = assetsInfo[p.code].name;
-          if (!summary[currentName]) {
-            summary[currentName] = { count: 0, totalPrice: 0 };
-          }
-          summary[currentName].count += 1;
-          summary[currentName].totalPrice += p.price;
-          grandTotal += p.price;
-        });
-
-        let finalTotalCount = 0;
-        Object.entries(summary).forEach(([name, data]) => {
-          finalTotalCount += data.count;
-          itemsListHTML += `<div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px;"><span>${name} x${data.count}</span><span>${data.totalPrice.toLocaleString()}${unitWon}</span></div>`;
-        });
-
-        // 🌟 [성분표 엔진 고정 보완] 유니크 코드 트래킹 연동 완료
-        let ingredientsSectionHTML = '';
-        uniqueProductCodes.forEach((code) => {
-          const item = assetsInfo[code] || assetsInfo[String(code)];
-          if (item && item.ingredients) {
-            const labelDesc = currentLang === 'en' ? 'DESCRIPTION' : '상품설명';
-            const labelEffect = currentLang === 'en' ? 'EFFECT' : '사용효과';
-            const labelIngre = currentLang === 'en' ? 'INGREDIENTS' : '전성분';
-            const labelCaution =
-              currentLang === 'en' ? 'CAUTION' : '사용시 주의사항';
-
-            ingredientsSectionHTML += `
-              <div style="margin-top: 12px; border: 1px solid #000; padding: 7px; border-radius: 4px; background-color: #fafafa; font-size: 10.5px;">
-                <div style="font-weight: bold; font-size: 11.5px; margin-bottom: 5px; border-bottom: 1px dashed #000; padding-bottom: 2px;">[ ${item.name} ]</div>
-                <div style="margin-bottom: 4px;"><strong>${labelDesc} :</strong> ${item.desc[currentLang]}</div>
-                <div style="margin-bottom: 4px;"><strong>${labelEffect} :</strong><br>${item.effect[currentLang]}</div>
-                <div style="margin-bottom: 4px; word-break: break-all; line-height: 1.3;"><strong>${labelIngre} :</strong><br>${item.ingredients[currentLang]}</div>
-                <div><strong>${labelCaution} :</strong><br>${item.caution[currentLang]}</div>
-              </div>
-            `;
-          }
-        });
-
-        const receiptDate =
-          currentLang === 'en'
-            ? new Date().toLocaleString('en-US')
-            : new Date().toLocaleString();
-
-        const iframe = document.createElement('iframe');
-        iframe.style.position = 'fixed';
-        iframe.style.width = '0';
-        iframe.style.height = '0';
-        iframe.style.border = '0';
-        document.body.appendChild(iframe);
-
-        const doc = iframe.contentWindow.document;
-        doc.open();
-        doc.write(`
-          <html>
-          <head>
-            <style>
-              @page { size: 58mm auto; margin: 0; }
-              body { color: #000; background: #fff; font-family: monospace; font-size: 11px; line-height: 1.4; padding: 10mm 3mm; box-sizing: border-box; }
-              .print-title { text-align: center; font-size: 16px; font-weight: bold; margin: 10px 0 2px 0; }
-              .print-divider { border-top: 1px dashed #000; margin: 8px 0; }
-              .receipt-face-wrapper { position: relative; width: 54mm; height: 54mm; margin-top: 6mm; margin-bottom: 6mm; overflow: hidden; filter: grayscale(1) contrast(1.6); }
-              .receipt-base-img { width: 100%; height: 100%; display: block; object-fit: cover; }
-              .print-footer { text-align: center; margin-top: 20px; font-size: 10px; font-weight: bold; }
-              .cut-space { height: 2mm; width: 100%; }
-            </style>
-          </head>
-          <body>
-            <div class="print-title">THE FAKE SHOP</div>
-            <div style="text-align: center; font-size: 9px">${receiptDate}</div>
-            <div class="print-divider"></div>
-            <div class="receipt-face-wrapper">
-              <img class="receipt-base-img" src="assets/base_face.png" />
-              ${facePartImagesHTML}
+              <button
+                class="qty-btn"
+                onclick="increaseItem('${data.code}')"
+              >+</button>
             </div>
-            <div class="print-divider"></div>
-            <div style="font-weight: bold; margin-bottom: 5px">${textRecListTitle}</div>
-            <div>${itemsListHTML}</div>
-            <div class="print-divider"></div>
-            <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 12px;">
-              <span>${textRecTotalQty}</span>
-              <span>${finalTotalCount}${unitQty}</span>
+          `;
+
+                priceDiv.innerHTML += `
+            <div class="price-row">
+              ${data.totalPrice.toLocaleString()}${unitWon}
             </div>
-            <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 13px; margin-top: 2px;">
-              <span>${textRecTotalPrice}</span>
-              <span>${grandTotal.toLocaleString()}${unitWon}</span>
-            </div>
-            
-            <div class="print-divider"></div>
-            <div style="font-weight: bold; font-size: 11px; margin-top: 5px; text-align: center;">${currentLang === 'en' ? '[ SPECIFICATION ]' : '[ 성분 표기 명세 ]'}</div>
-            ${ingredientsSectionHTML}
+          `;
+              });
 
-            <div class="print-divider"></div>
-            <div class="print-footer">${textRecFooter}</div>
-            <div class="cut-space"></div>
-          </body>
-          </html>
-        `);
-        doc.close();
+              nameDiv.scrollTop = nameDiv.scrollHeight;
+              qtyDiv.scrollTop = qtyDiv.scrollHeight;
+              priceDiv.scrollTop = priceDiv.scrollHeight;
+            }
 
-        globalLangBox.style.display = 'none';
-        if (globalBackBox) globalBackBox.style.display = 'none';
+            function openCart() {
+              document.getElementById('screen-main').style.display = 'none';
+              const list = document.getElementById('cart-list');
+              list.innerHTML = '';
+              const summary = {};
+              let grandTotal = 0;
 
-        const images = doc.images;
-        let loaded = 0;
+              scannedParts.forEach((p) => {
+                const currentName = assetsInfo[p.code].name;
+                if (!summary[currentName]) {
+                  summary[currentName] = { count: 0, totalPrice: 0 };
+                }
+                summary[currentName].count += 1;
+                summary[currentName].totalPrice += p.price;
+                grandTotal += p.price;
+              });
 
-        function tryPrint() {
-          loaded++;
+              Object.entries(summary).forEach(([name, data]) => {
+                list.innerHTML += `
+                  <div style="display:flex; justify-content:space-between; margin-bottom:1.5vh;">
+                      <span>${name} (${data.count}${unitQty})</span>
+                      <span style="color:var(--stroke-orange); font-weight:900;">${data.totalPrice.toLocaleString()}${unitWon}</span>
+                  </div>
+                `;
+              });
+              document.getElementById('cart-total-price').innerText =
+                `${textModalTotal}${grandTotal.toLocaleString()}${unitWon}`;
 
-          if (loaded >= images.length) {
-            iframe.contentWindow.focus();
-            iframe.contentWindow.print();
-          }
-        }
+              document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
+              document.getElementById('modal-cart').style.display = 'flex';
+            }
 
-        for (let img of images) {
-          if (img.complete) {
-            tryPrint();
-          } else {
-            img.onload = tryPrint;
-            img.onerror = tryPrint;
-          }
-        }
+            function actionPrintAndReset() {
+              let facePartImagesHTML = '';
+              const sortedParts = [...scannedParts].sort((a, b) => {
+                if (assetsInfo[a.code].type === 'mole') return 1;
+                if (assetsInfo[b.code].type === 'mole') return -1;
+                return 0;
+              });
 
-        setTimeout(() => {
-          document.body.removeChild(iframe);
-          location.reload();
-        }, 300);
-      }
+              sortedParts.forEach((part) => {
+                const scaleRatio = 48 / 1280;
+                const moveX = part.randomX * scaleRatio;
+                const moveY = part.randomY * scaleRatio;
+                facePartImagesHTML += `<img style="position: absolute; width: 48mm; height: 48mm; top: 0; left: 0; object-fit: cover; transform-origin: top left; mix-blend-mode: multiply; filter: grayscale(1) brightness(0) contrast(999); image-rendering: pixelated; transform: translate(${moveX}mm, ${moveY}mm);" src="${assetsInfo[part.code].src}" />`;
+              });
 
-      function changeToKorean() {
-        console.log('THE FAKE SHOP - Korean Mode Restored!');
-        currentLang = 'ko';
-        unitQty = '개';
-        unitWon = '원';
-        textModalTotal = '총 결제 금액: ';
-        textBtnBack = '이전으로';
-        textBtnPayFinal = '결제하기';
+              let itemsListHTML = '';
+              const summary = {};
+              let grandTotal = 0;
+              const uniqueProductCodes = new Set();
 
-        textRecListTitle = '[구매 확정 목록]';
-        textRecTotalQty = '총 수량';
-        textRecTotalPrice = '총 결제 금액';
-        textRecFooter =
-          '안녕하세요~ The Fake Shop 입니다~<br />또 이용해 주세요!';
+              scannedParts.forEach((p) => {
+                uniqueProductCodes.add(p.code);
+                const currentName = assetsInfo[p.code].name;
+                if (!summary[currentName]) {
+                  summary[currentName] = { count: 0, totalPrice: 0 };
+                }
+                summary[currentName].count += 1;
+                summary[currentName].totalPrice += p.price;
+                grandTotal += p.price;
+              });
 
-        assetsInfo['830471920631'].name = '도연 교수님의 눈';
-        assetsInfo['830471920613'].name = '민혁 교수님의 눈';
-        assetsInfo['830471920572'].name = '보슬 교수님의 눈';
-        assetsInfo['830471920609'].name = '승범 교수님의 눈';
-        assetsInfo['830471920586'].name = '유미 교수님의 눈';
+              let finalTotalCount = 0;
+              Object.entries(summary).forEach(([name, data]) => {
+                finalTotalCount += data.count;
+                itemsListHTML += `<div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px;"><span>${name} x${data.count}</span><span>${data.totalPrice.toLocaleString()}${unitWon}</span></div>`;
+              });
 
-        assetsInfo['830471920554'].name = '재하 교수님의 눈';
-        assetsInfo['830471920590'].name = '주혜 교수님의 눈';
-        assetsInfo['830471920568'].name = '준현 교수님의 눈';
-        assetsInfo['830471920277'].name = '재훈 교수님의 눈';
-        assetsInfo['830471920627'].name = '호남 교수님의 눈';
+              // 🌟 [성분표 엔진 고정 보완] 유니크 코드 트래킹 연동 완료
+              let ingredientsSectionHTML = '';
+              uniqueProductCodes.forEach((code) => {
+                const item = assetsInfo[code] || assetsInfo[String(code)];
+                if (item && item.ingredients) {
+                  const labelDesc = currentLang === 'en' ? 'DESCRIPTION' : '상품설명';
+                  const labelEffect = currentLang === 'en' ? 'EFFECT' : '사용효과';
+                  const labelIngre = currentLang === 'en' ? 'INGREDIENTS' : '전성분';
+                  const labelCaution =
+                    currentLang === 'en' ? 'CAUTION' : '사용시 주의사항';
 
-        document.getElementById('text-touch-msg').innerText =
-          '화면을 터치해 주세요.';
-        document.getElementById('text-scan-title').innerText =
-          '상품 바코드를 스캔해 주세요';
-        document.getElementById('lbl-dash-name').innerText = '상품 이름';
-        document.getElementById('lbl-dash-qty').innerText = '수량';
-        document.getElementById('lbl-dash-price').innerText = '금액';
-        document.getElementById('btn-open-cart').innerText = '결제하기';
-        document.getElementById('text-modal-title').innerText =
-          '주문 리스트 확인';
-        document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
-        document.getElementById('btn-top-back').innerText = textBtnBack;
+                  ingredientsSectionHTML += `
+                    <div style="margin-top: 12px; border: 1px solid #000; padding: 7px; border-radius: 4px; background-color: #fafafa; font-size: 10.5px;">
+                      <div style="font-weight: bold; font-size: 11.5px; margin-bottom: 5px; border-bottom: 1px dashed #000; padding-bottom: 2px;">[ ${item.name} ]</div>
+                      <div style="margin-bottom: 4px;"><strong>${labelDesc} :</strong> ${item.desc[currentLang]}</div>
+                      <div style="margin-bottom: 4px;"><strong>${labelEffect} :</strong><br>${item.effect[currentLang]}</div>
+                      <div style="margin-bottom: 4px; word-break: break-all; line-height: 1.3;"><strong>${labelIngre} :</strong><br>${item.ingredients[currentLang]}</div>
+                      <div><strong>${labelCaution} :</strong><br>${item.caution[currentLang]}</div>
+                    </div>
+                  `;
+                }
+              });
 
-        if (document.getElementById('modal-cart').style.display === 'flex') {
-          openCart();
-        } else {
-          updateDashboards();
-        }
-      }
+              const receiptDate =
+                currentLang === 'en'
+                  ? new Date().toLocaleString('en-US')
+                  : new Date().toLocaleString();
 
-      function loadEnglishScript() {
-        console.log(
-          'THE FAKE SHOP - English Mode Active [Internal Micro-Engine]',
-        );
+              const iframe = document.createElement('iframe');
+              iframe.style.position = 'fixed';
+              iframe.style.width = '0';
+              iframe.style.height = '0';
+              iframe.style.border = '0';
+              document.body.appendChild(iframe);
 
-        currentLang = 'en';
-        unitQty = 'ea';
-        unitWon = ' KRW';
-        textModalTotal = 'TOTAL AMOUNT: ';
-        textBtnBack = 'BACK';
-        textBtnPayFinal = 'CHECKOUT';
+              const doc = iframe.contentWindow.document;
+              doc.open();
+              doc.write(`
+                <html>
+                <head>
+                  <style>
+                    @page { size: 58mm auto; margin: 0; }
+                    body { color: #000; background: #fff; font-family: monospace; font-size: 11px; line-height: 1.4; padding: 10mm 3mm; box-sizing: border-box; }
+                    .print-title { text-align: center; font-size: 16px; font-weight: bold; margin: 10px 0 2px 0; }
+                    .print-divider { border-top: 1px dashed #000; margin: 8px 0; }
+                    .receipt-face-wrapper { position: relative; width: 54mm; height: 54mm; margin-top: 6mm; margin-bottom: 6mm; overflow: hidden; filter: grayscale(1) contrast(1.6); }
+                    .receipt-base-img { width: 100%; height: 100%; display: block; object-fit: cover; }
+                    .print-footer { text-align: center; margin-top: 20px; font-size: 10px; font-weight: bold; }
+                    .cut-space { height: 2mm; width: 100%; }
+                  </style>
+                </head>
+                <body>
+                  <div class="print-title">THE FAKE SHOP</div>
+                  <div style="text-align: center; font-size: 9px">${receiptDate}</div>
+                  <div class="print-divider"></div>
+                  <div class="receipt-face-wrapper">
+                    <img class="receipt-base-img" src="assets/base_face.png" />
+                    ${facePartImagesHTML}
+                  </div>
+                  <div class="print-divider"></div>
+                  <div style="font-weight: bold; margin-bottom: 5px">${textRecListTitle}</div>
+                  <div>${itemsListHTML}</div>
+                  <div class="print-divider"></div>
+                  <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 12px;">
+                    <span>${textRecTotalQty}</span>
+                    <span>${finalTotalCount}${unitQty}</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; font-weight: bold; font-size: 13px; margin-top: 2px;">
+                    <span>${textRecTotalPrice}</span>
+                    <span>${grandTotal.toLocaleString()}${unitWon}</span>
+                  </div>
 
-        textRecListTitle = '[CONFIRMED ORDER LIST]';
-        textRecTotalQty = 'TOTAL QTY';
-        textRecTotalPrice = 'TOTAL AMOUNT';
-        textRecFooter =
-          'Thank you for visiting The Fake Shop~<br />Please come again!';
+                  <div class="print-divider"></div>
+                  <div style="font-weight: bold; font-size: 11px; margin-top: 5px; text-align: center;">${currentLang === 'en' ? '[ SPECIFICATION ]' : '[ 성분 표기 명세 ]'}</div>
+                  ${ingredientsSectionHTML}
 
-        assetsInfo['830471920631'].name = "Prof. Doyeon's Eye";
-        assetsInfo['830471920613'].name = "Prof. Minhyuk's Eye";
-        assetsInfo['830471920572'].name = "Prof. Boseul's Eye";
-        assetsInfo['830471920609'].name = "Prof. Seungbeom's Eye";
-        assetsInfo['830471920586'].name = "Prof. Yumi's Eye";
+                  <div class="print-divider"></div>
+                  <div class="print-footer">${textRecFooter}</div>
+                  <div class="cut-space"></div>
+                </body>
+                </html>
+              `);
+              doc.close();
 
-        assetsInfo['830471920554'].name = "Prof. Jaeha's Eye";
-        assetsInfo['830471920590'].name = "Prof. Juhye's Eye";
-        assetsInfo['830471920568'].name = "Prof. Junhyun's Eye";
-        assetsInfo['830471920277'].name = "Prof. Jaehun's Eye";
-        assetsInfo['830471920627'].name = "Prof. Honam's Eye";
+              globalLangBox.style.display = 'none';
+              if (globalBackBox) globalBackBox.style.display = 'none';
 
-        document.getElementById('text-touch-msg').innerText = 'TOUCH TO START';
-        document.getElementById('text-scan-title').innerText =
-          'PLEASE SCAN THE BARCODE';
-        document.getElementById('lbl-dash-name').innerText = 'ITEM NAME';
-        document.getElementById('lbl-dash-qty').innerText = 'QTY';
-        document.getElementById('lbl-dash-price').innerText = 'PRICE';
-        document.getElementById('btn-open-cart').innerText = 'CHECKOUT';
-        document.getElementById('text-modal-title').innerText =
-          'CONFIRM YOUR ORDER';
+              const images = doc.images;
+              let loaded = 0;
 
-        document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
-        document.getElementById('btn-top-back').innerText = textBtnBack;
+              function tryPrint() {
+                loaded++;
 
-        if (document.getElementById('modal-cart').style.display === 'flex') {
-          openCart();
-        } else {
-          updateDashboards();
-        }
-      }
+                if (loaded >= images.length) {
+                  iframe.contentWindow.focus();
+                  iframe.contentWindow.print();
+                }
+              }
 
-      function increaseItem(code) {
-        scannedParts.push({
-          code: code,
-          name: assetsInfo[code].name,
-          price: assetsInfo[code].price,
-          randomX: (Math.random() - 0.5) * 180,
-          randomY: (Math.random() - 0.5) * 300,
-        });
+              for (let img of images) {
+                if (img.complete) {
+                  tryPrint();
+                } else {
+                  img.onload = tryPrint;
+                  img.onerror = tryPrint;
+                }
+              }
 
-        updateDashboards();
-        draw();
-      }
+              setTimeout(() => {
+                document.body.removeChild(iframe);
+                location.reload();
+              }, 300);
+            }
 
-      function decreaseItem(code) {
-        const idx = scannedParts.findLastIndex(
-          (p) => String(p.code) === String(code),
-        );
+            function changeToKorean() {
+              console.log('THE FAKE SHOP - Korean Mode Restored!');
+              currentLang = 'ko';
+              unitQty = '개';
+              unitWon = '원';
+              textModalTotal = '총 결제 금액: ';
+              textBtnBack = '이전으로';
+              textBtnPayFinal = '결제하기';
 
-        if (idx !== -1) {
-          scannedParts.splice(idx, 1);
-        }
+              textRecListTitle = '[구매 확정 목록]';
+              textRecTotalQty = '총 수량';
+              textRecTotalPrice = '총 결제 금액';
+              textRecFooter =
+                '안녕하세요~ The Fake Shop 입니다~<br />또 이용해 주세요!';
 
-        updateDashboards();
-        draw();
-      }
+              assetsInfo['830471920631'].name = '도연 교수님의 눈';
+              assetsInfo['830471920613'].name = '민혁 교수님의 눈';
+              assetsInfo['830471920572'].name = '보슬 교수님의 눈';
+              assetsInfo['830471920609'].name = '승범 교수님의 눈';
+              assetsInfo['830471920586'].name = '유미 교수님의 눈';
 
-      function removeItem(code) {
-        scannedParts = scannedParts.filter(
-          (p) => String(p.code) !== String(code),
-        );
+              assetsInfo['830471920554'].name = '재하 교수님의 눈';
+              assetsInfo['830471920590'].name = '주혜 교수님의 눈';
+              assetsInfo['830471920568'].name = '준현 교수님의 눈';
+              assetsInfo['830471920277'].name = '재훈 교수님의 눈';
+              assetsInfo['830471920627'].name = '호남 교수님의 눈';
 
-        updateDashboards();
-        draw();
-      }
+              document.getElementById('text-touch-msg').innerText =
+                '화면을 터치해 주세요.';
+              document.getElementById('text-scan-title').innerText =
+                '상품 바코드를 스캔해 주세요';
+              document.getElementById('lbl-dash-name').innerText = '상품 이름';
+              document.getElementById('lbl-dash-qty').innerText = '수량';
+              document.getElementById('lbl-dash-price').innerText = '금액';
+              document.getElementById('btn-open-cart').innerText = '결제하기';
+              document.getElementById('text-modal-title').innerText =
+                '주문 리스트 확인';
+              document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
+              document.getElementById('btn-top-back').innerText = textBtnBack;
 
-      const languageBtn = document.querySelector('.language-btn');
-      languageBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        globalLangBox.classList.toggle('open');
-      });
-      document.addEventListener('click', () => {
-        globalLangBox.classList.remove('open');
-      });
+              if (document.getElementById('modal-cart').style.display === 'flex') {
+                openCart();
+              } else {
+                updateDashboards();
+              }
+            }
 
-      const targetButtons =
-        '.btn-pay-active, .btn-back-style, .language-btn, .language-item';
+            function loadEnglishScript() {
+              console.log(
+                'THE FAKE SHOP - English Mode Active [Internal Micro-Engine]',
+              );
 
-      function addTouchEffect(target) {
-        const btn = target.closest(targetButtons);
-        if (btn) {
-          btn.classList.add('js-touched');
-        }
-      }
+              currentLang = 'en';
+              unitQty = 'ea';
+              unitWon = ' KRW';
+              textModalTotal = 'TOTAL AMOUNT: ';
+              textBtnBack = 'BACK';
+              textBtnPayFinal = 'CHECKOUT';
 
-      function removeTouchEffect(target) {
-        const btn = target.closest(targetButtons);
-        if (btn) {
-          setTimeout(() => {
-            btn.classList.remove('js-touched');
-          }, 80);
-        }
-      }
+              textRecListTitle = '[CONFIRMED ORDER LIST]';
+              textRecTotalQty = 'TOTAL QTY';
+              textRecTotalPrice = 'TOTAL AMOUNT';
+              textRecFooter =
+                'Thank you for visiting The Fake Shop~<br />Please come again!';
 
-      document.addEventListener(
-        'touchstart',
-        (e) => {
-          addTouchEffect(e.target);
-        },
-        { passive: true },
-      );
-      document.addEventListener(
-        'touchend',
-        (e) => {
-          removeTouchEffect(e.target);
-        },
-        { passive: true },
-      );
-      document.addEventListener('mousedown', (e) => {
-        addTouchEffect(e.target);
-      });
-      document.addEventListener('mouseup', (e) => {
-        removeTouchEffect(e.target);
-      });
-      document.addEventListener('pointerdown', (e) => {
-        addTouchEffect(e.target);
-      });
-      document.addEventListener('pointerup', (e) => {
-        removeTouchEffect(e.target);
-      });
+              assetsInfo['830471920631'].name = "Prof. Doyeon's Eye";
+              assetsInfo['830471920613'].name = "Prof. Minhyuk's Eye";
+              assetsInfo['830471920572'].name = "Prof. Boseul's Eye";
+              assetsInfo['830471920609'].name = "Prof. Seungbeom's Eye";
+              assetsInfo['830471920586'].name = "Prof. Yumi's Eye";
+
+              assetsInfo['830471920554'].name = "Prof. Jaeha's Eye";
+              assetsInfo['830471920590'].name = "Prof. Juhye's Eye";
+              assetsInfo['830471920568'].name = "Prof. Junhyun's Eye";
+              assetsInfo['830471920277'].name = "Prof. Jaehun's Eye";
+              assetsInfo['830471920627'].name = "Prof. Honam's Eye";
+
+              document.getElementById('text-touch-msg').innerText = 'TOUCH TO START';
+              document.getElementById('text-scan-title').innerText =
+                'PLEASE SCAN THE BARCODE';
+              document.getElementById('lbl-dash-name').innerText = 'ITEM NAME';
+              document.getElementById('lbl-dash-qty').innerText = 'QTY';
+              document.getElementById('lbl-dash-price').innerText = 'PRICE';
+              document.getElementById('btn-open-cart').innerText = 'CHECKOUT';
+              document.getElementById('text-modal-title').innerText =
+                'CONFIRM YOUR ORDER';
+
+              document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
+              document.getElementById('btn-top-back').innerText = textBtnBack;
+
+              if (document.getElementById('modal-cart').style.display === 'flex') {
+                openCart();
+              } else {
+                updateDashboards();
+              }
+            }
+
+            function increaseItem(code) {
+              scannedParts.push({
+                code: code,
+                name: assetsInfo[code].name,
+                price: assetsInfo[code].price,
+                randomX: (Math.random() - 0.5) * 180,
+                randomY: (Math.random() - 0.5) * 300,
+              });
+
+              updateDashboards();
+              draw();
+            }
+
+            function decreaseItem(code) {
+              const idx = scannedParts.findLastIndex(
+                (p) => String(p.code) === String(code),
+              );
+
+              if (idx !== -1) {
+                scannedParts.splice(idx, 1);
+              }
+
+              updateDashboards();
+              draw();
+            }
+
+            function removeItem(code) {
+              scannedParts = scannedParts.filter(
+                (p) => String(p.code) !== String(code),
+              );
+
+              updateDashboards();
+              draw();
+            }
+
+            const languageBtn = document.querySelector('.language-btn');
+            languageBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              globalLangBox.classList.toggle('open');
+            });
+            document.addEventListener('click', () => {
+              globalLangBox.classList.remove('open');
+            });
+
+            const targetButtons =
+              '.btn-pay-active, .btn-back-style, .language-btn, .language-item';
+
+            function addTouchEffect(target) {
+              const btn = target.closest(targetButtons);
+              if (btn) {
+                btn.classList.add('js-touched');
+              }
+            }
+
+            function removeTouchEffect(target) {
+              const btn = target.closest(targetButtons);
+              if (btn) {
+                setTimeout(() => {
+                  btn.classList.remove('js-touched');
+                }, 80);
+              }
+            }
+
+            document.addEventListener(
+              'touchstart',
+              (e) => {
+                addTouchEffect(e.target);
+              },
+              { passive: true },
+            );
+            document.addEventListener(
+              'touchend',
+              (e) => {
+                removeTouchEffect(e.target);
+              },
+              { passive: true },
+            );
+            document.addEventListener('mousedown', (e) => {
+              addTouchEffect(e.target);
+            });
+            document.addEventListener('mouseup', (e) => {
+              removeTouchEffect(e.target);
+            });
+            document.addEventListener('pointerdown', (e) => {
+              addTouchEffect(e.target);
+            });
+            document.addEventListener('pointerup', (e) => {
+              removeTouchEffect(e.target);
+            });
     </script>
   </body>
 </html>
