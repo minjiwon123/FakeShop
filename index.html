@@ -2757,6 +2757,7 @@ if (totalDiv) {
           loaded++;
 
           if (loaded >= images.length) {
+            console.log("PRINT START");
             iframe.contentWindow.focus();
             iframe.contentWindow.print();
             iframe.contentWindow.onafterprint = () => {
