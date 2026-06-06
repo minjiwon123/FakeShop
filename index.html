@@ -2589,6 +2589,7 @@ if (totalDiv) {
       }
 
       function openCart() {
+        alert("openCart 시작");
         document.getElementById('screen-main').style.display = 'none';
         const list = document.getElementById('cart-list');
         list.innerHTML = '';
@@ -2617,6 +2618,7 @@ if (totalDiv) {
           `${textModalTotal}${grandTotal.toLocaleString()}${unitWon}`;
 
         document.getElementById('btn-final-pay').innerText = textBtnPayFinal;
+        alert("modal 열기 직전");
         document.getElementById('modal-cart').style.display = 'flex';
       }
 
