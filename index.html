@@ -2752,10 +2752,11 @@ Depending on the environment, unexpected meal invitations and new ideas may occu
           if (loaded >= images.length) {
             iframe.contentWindow.focus();
             iframe.contentWindow.print();
-            iframe.contentWindow.onafterprint = () => {
+
+            setTimeout(() => {
               document.body.removeChild(iframe);
               location.reload();
-            };
+            }, 3000);
           }
         }
 
