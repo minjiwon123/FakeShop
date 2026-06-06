@@ -456,6 +456,18 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+
+      .dash-total-price {
+        font-size: 2.4vh;
+
+        font-weight: 700;
+
+        text-align: center;
+
+        line-height: 1.2;
+
+        margin-top: 8px;
+      }
     </style>
   </head>
 
@@ -528,6 +540,8 @@
               결제하기
             </button>
           </div>
+
+          <div id="dash-total-price" class="dash-total-price">총합 : 0원</div>
         </div>
       </div>
 
@@ -2443,7 +2457,15 @@ Depending on the environment, unexpected meal invitations and new ideas may occu
           const img =
             loadedImages[part.code] || loadedImages[String(part.code)];
           if (img && img.complete) {
-            ctx.drawImage(img, part.randomX, part.randomY, 1280, 1280);
+            ctx.save();
+
+            ctx.translate(part.randomX + 640, part.randomY + 640);
+
+            ctx.rotate(((part.rotation || 0) * Math.PI) / 180);
+
+            ctx.drawImage(img, -640, -640, 1280, 1280);
+
+            ctx.restore();
           }
         });
       }
@@ -2461,11 +2483,14 @@ Depending on the environment, unexpected meal invitations and new ideas may occu
               ) || valStr;
 
             scannedParts.push({
-              code: exactCode,
-              name: info.name,
-              price: info.price,
+              code: code,
+              name: assetsInfo[code].name,
+              price: assetsInfo[code].price,
+
               randomX: (Math.random() - 0.5) * 180,
               randomY: (Math.random() - 0.5) * 300,
+
+              rotation: Math.random() * 24 - 12,
             });
             updateDashboards();
             draw();
@@ -2507,7 +2532,10 @@ Depending on the environment, unexpected meal invitations and new ideas may occu
         qtyDiv.innerHTML = '';
         priceDiv.innerHTML = '';
 
+        let grandTotal = 0;
+
         summary.forEach((data, name) => {
+          grandTotal += data.totalPrice;
           const longClass = name.length > 14 ? 'long-name' : '';
 
           nameDiv.innerHTML += `
@@ -2545,9 +2573,11 @@ Depending on the environment, unexpected meal invitations and new ideas may occu
     `;
         });
 
-        nameDiv.scrollTop = nameDiv.scrollHeight;
-        qtyDiv.scrollTop = qtyDiv.scrollHeight;
-        priceDiv.scrollTop = priceDiv.scrollHeight;
+        requestAnimationFrame(() => {
+          nameDiv.scrollTop = nameDiv.scrollHeight;
+          qtyDiv.scrollTop = qtyDiv.scrollHeight;
+          priceDiv.scrollTop = priceDiv.scrollHeight;
+        });
       }
 
       function openCart() {
@@ -2841,8 +2871,11 @@ Depending on the environment, unexpected meal invitations and new ideas may occu
           code: code,
           name: assetsInfo[code].name,
           price: assetsInfo[code].price,
+
           randomX: (Math.random() - 0.5) * 180,
           randomY: (Math.random() - 0.5) * 300,
+
+          rotation: Math.random() * 24 - 12,
         });
 
         updateDashboards();
