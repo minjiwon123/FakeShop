@@ -899,8 +899,26 @@
         globalLangBox.style.display = 'none';
         if (globalBackBox) globalBackBox.style.display = 'none';
 
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
+        const images = doc.images;
+        let loaded = 0;
+
+        function tryPrint() {
+          loaded++;
+
+          if (loaded >= images.length) {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+          }
+        }
+
+        for (let img of images) {
+          if (img.complete) {
+            tryPrint();
+          } else {
+            img.onload = tryPrint;
+            img.onerror = tryPrint;
+          }
+        }
 
         setTimeout(() => {
           document.body.removeChild(iframe);
