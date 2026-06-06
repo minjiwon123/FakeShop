@@ -40,17 +40,27 @@
     const list = document.getElementById('cart-list');
     list.innerHTML = '';
 
-    const summary = {};
-    let grandTotal = 0;
+    const summary = new Map();
 
     scannedParts.forEach((p) => {
       const currentName = assetsInfo[p.code].name;
-      if (!summary[currentName]) {
-        summary[currentName] = { count: 0, totalPrice: 0 };
+
+      if (summary.has(currentName)) {
+        const old = summary.get(currentName);
+        summary.delete(currentName);
+
+        summary.set(currentName, {
+          count: old.count + 1,
+          totalPrice: old.totalPrice + p.price,
+          code: p.code,
+        });
+      } else {
+        summary.set(currentName, {
+          count: 1,
+          totalPrice: p.price,
+          code: p.code,
+        });
       }
-      summary[currentName].count += 1;
-      summary[currentName].totalPrice += p.price;
-      grandTotal += p.price;
     });
 
     Object.entries(summary).forEach(([name, data]) => {

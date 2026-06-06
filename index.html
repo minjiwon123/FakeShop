@@ -203,6 +203,41 @@
         font-weight: 700;
       }
 
+      .item-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .item-delete {
+        border: none;
+        background: none;
+        color: #f15a31;
+        font-size: 2vh;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .qty-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .qty-btn {
+        border: none;
+        background: white;
+        color: #f15a31;
+        border-radius: 50%;
+        width: 2.5vh;
+        height: 2.5vh;
+        font-size: 1.8vh;
+        font-weight: bold;
+        cursor: pointer;
+        line-height: 1;
+      }
+
       /* 결제하기 버튼 크기 날씬하고 세련되게 보정 세팅 */
       .btn-pay-active {
         background: var(--point-red) !important;
@@ -918,28 +953,74 @@
         const nameDiv = document.getElementById('dash-name-list');
         const qtyDiv = document.getElementById('dash-qty-list');
         const priceDiv = document.getElementById('dash-price-list');
-        const summary = {};
+
+        const summary = new Map();
 
         scannedParts.forEach((p) => {
           const currentName = assetsInfo[p.code].name;
-          if (!summary[currentName]) {
-            summary[currentName] = { count: 0, totalPrice: 0 };
+
+          if (summary.has(currentName)) {
+            const old = summary.get(currentName);
+
+            summary.delete(currentName);
+
+            summary.set(currentName, {
+              count: old.count + 1,
+              totalPrice: old.totalPrice + p.price,
+              code: p.code,
+            });
+          } else {
+            summary.set(currentName, {
+              count: 1,
+              totalPrice: p.price,
+              code: p.code,
+            });
           }
-          summary[currentName].count += 1;
-          summary[currentName].totalPrice += p.price;
         });
 
         nameDiv.innerHTML = '';
         qtyDiv.innerHTML = '';
         priceDiv.innerHTML = '';
-        Object.entries(summary).forEach(([name, data]) => {
-          nameDiv.innerHTML += `<div>${name}</div>`;
-          qtyDiv.innerHTML += `<div class="qty-row">${data.count}${unitQty}</div>`;
-          priceDiv.innerHTML += `<div class="price-row">${data.totalPrice.toLocaleString()}${unitWon}</div>`;
-          nameDiv.scrollTop = nameDiv.scrollHeight;
-          qtyDiv.scrollTop = qtyDiv.scrollHeight;
-          priceDiv.scrollTop = priceDiv.scrollHeight;
+
+        summary.forEach((data, name) => {
+          nameDiv.innerHTML += `
+      <div class="item-row">
+        <span>${name}</span>
+        <button
+          class="item-delete"
+          onclick="removeItem('${data.code}')"
+        >
+          ✕
+        </button>
+      </div>
+    `;
+
+          qtyDiv.innerHTML += `
+      <div class="qty-row">
+        <button
+          class="qty-btn"
+          onclick="decreaseItem('${data.code}')"
+        >−</button>
+
+        <span>${data.count}${unitQty}</span>
+
+        <button
+          class="qty-btn"
+          onclick="increaseItem('${data.code}')"
+        >+</button>
+      </div>
+    `;
+
+          priceDiv.innerHTML += `
+      <div class="price-row">
+        ${data.totalPrice.toLocaleString()}${unitWon}
+      </div>
+    `;
         });
+
+        nameDiv.scrollTop = nameDiv.scrollHeight;
+        qtyDiv.scrollTop = qtyDiv.scrollHeight;
+        priceDiv.scrollTop = priceDiv.scrollHeight;
       }
 
       function openCart() {
@@ -1220,6 +1301,41 @@
         } else {
           updateDashboards();
         }
+      }
+
+      function increaseItem(code) {
+        scannedParts.push({
+          code: code,
+          name: assetsInfo[code].name,
+          price: assetsInfo[code].price,
+          randomX: (Math.random() - 0.5) * 180,
+          randomY: (Math.random() - 0.5) * 300,
+        });
+
+        updateDashboards();
+        draw();
+      }
+
+      function decreaseItem(code) {
+        const idx = scannedParts.findLastIndex(
+          (p) => String(p.code) === String(code),
+        );
+
+        if (idx !== -1) {
+          scannedParts.splice(idx, 1);
+        }
+
+        updateDashboards();
+        draw();
+      }
+
+      function removeItem(code) {
+        scannedParts = scannedParts.filter(
+          (p) => String(p.code) !== String(code),
+        );
+
+        updateDashboards();
+        draw();
       }
 
       const languageBtn = document.querySelector('.language-btn');
