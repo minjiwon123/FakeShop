@@ -443,6 +443,27 @@
       #print-receipt-zone {
         display: none;
       }
+
+      .item-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        min-height: 2.8vh;
+
+        font-size: 1.8vh;
+        line-height: 1.1;
+      }
+
+      .item-row.long-name {
+        font-size: 1.3vh;
+      }
+
+      .item-row span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     </style>
   </head>
 
@@ -2495,17 +2516,19 @@ Depending on the environment, unexpected meal invitations and new ideas may occu
         priceDiv.innerHTML = '';
 
         summary.forEach((data, name) => {
+          const longClass = name.length > 14 ? 'long-name' : '';
+
           nameDiv.innerHTML += `
-      <div class="item-row">
-        <span>${name}</span>
-        <button
-          class="item-delete"
-          onclick="removeItem('${data.code}')"
-        >
-          ✕
-        </button>
-      </div>
-    `;
+  <div class="item-row ${longClass}">
+    <span>${name}</span>
+    <button
+      class="item-delete"
+      onclick="removeItem('${data.code}')"
+    >
+      ✕
+    </button>
+  </div>
+`;
 
           qtyDiv.innerHTML += `
       <div class="qty-row">
@@ -2910,6 +2933,21 @@ Depending on the environment, unexpected meal invitations and new ideas may occu
       document.addEventListener('pointerup', (e) => {
         removeTouchEffect(e.target);
       });
+      const nameList = document.getElementById('dash-name-list');
+      const qtyList = document.getElementById('dash-qty-list');
+      const priceList = document.getElementById('dash-price-list');
+
+      function syncScroll(source) {
+        const top = source.scrollTop;
+
+        nameList.scrollTop = top;
+        qtyList.scrollTop = top;
+        priceList.scrollTop = top;
+      }
+
+      nameList.addEventListener('scroll', () => syncScroll(nameList));
+      qtyList.addEventListener('scroll', () => syncScroll(qtyList));
+      priceList.addEventListener('scroll', () => syncScroll(priceList));
     </script>
   </body>
 </html>
