@@ -91,7 +91,7 @@
 
       .scan-header {
         width: 100%;
-        padding: 8vh 0 1vh 0;
+        padding: 2vh 0 1vh 0;
         text-align: center;
       }
 
@@ -113,10 +113,13 @@
       }
 
       #canvas-container {
-        margin: 1vh auto;
-        width: 65vh;
-        height: 65vh;
-        max-width: 90vw;
+        width: 52vh;
+        height: 52vh;
+
+        max-width: 82vw;
+        max-height: 52vh;
+
+        margin: 0.5vh auto;
         border: 5px dashed var(--stroke-orange);
         border-radius: 3vh;
         box-sizing: border-box;
@@ -133,12 +136,17 @@
         position: absolute;
         bottom: 0;
         width: 100%;
-        height: 20vh;
+        height: 15vh;
         background: var(--point-blue);
         color: #fff;
         display: flex;
         padding: 1.5vh 0;
         box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .back-box,
+      .language-box {
+        top: 1vh;
       }
 
       .dash-section {
