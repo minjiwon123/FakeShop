@@ -183,13 +183,18 @@
       .list-container {
         width: 90%;
         height: 12vh;
-        overflow-y: hidden;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
         display: flex;
         flex-direction: column;
         gap: 0.8vh;
         font-size: 2.1vh;
         text-align: center;
         color: var(--text-dark);
+      }
+      .list-container::-webkit-scrollbar {
+        display: none;
       }
 
       .qty-row,
@@ -931,6 +936,9 @@
           nameDiv.innerHTML += `<div>${name}</div>`;
           qtyDiv.innerHTML += `<div class="qty-row">${data.count}${unitQty}</div>`;
           priceDiv.innerHTML += `<div class="price-row">${data.totalPrice.toLocaleString()}${unitWon}</div>`;
+          nameDiv.scrollTop = nameDiv.scrollHeight;
+          qtyDiv.scrollTop = qtyDiv.scrollHeight;
+          priceDiv.scrollTop = priceDiv.scrollHeight;
         });
       }
 
