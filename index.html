@@ -2759,6 +2759,10 @@ if (totalDiv) {
           if (loaded >= images.length) {
             iframe.contentWindow.focus();
             iframe.contentWindow.print();
+            iframe.contentWindow.onafterprint = () => {
+  document.body.removeChild(iframe);
+  location.reload();
+};
           }
         }
 
